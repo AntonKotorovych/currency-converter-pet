@@ -1,3 +1,10 @@
+import CurrencyRateTicker from '../../components/CurrencyRateTicker';
+import Card from '../../components/Card';
+
 export default function HomePage() {
-  return <h1>Hello World!</h1>;
+  return (
+    <Card>
+      <CurrencyRateTicker />
+    </Card>
+  );
 }
