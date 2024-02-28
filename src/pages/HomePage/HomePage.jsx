@@ -1,10 +1,14 @@
 import CurrencyRateTicker from '../../components/CurrencyRateTicker';
 import Card from '../../components/Card';
+import MainTitle from '../../components/MainTitle';
 
 export default function HomePage() {
   return (
-    <Card>
-      <CurrencyRateTicker />
-    </Card>
+    <>
+      <MainTitle />
+      <Card>
+        <CurrencyRateTicker />
+      </Card>
+    </>
   );
 }

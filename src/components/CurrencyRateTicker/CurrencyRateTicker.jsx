@@ -17,7 +17,6 @@ export default function CurrencyRateTicker() {
     );
   }
 
-  console.log(exchangeRates);
   return (
     <div className={styles['currency-rate-container']}>
       <ul className={styles['currency-rate-list']}>
