@@ -1,24 +1,35 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { NBU_CURRENCY_EXCHANGE_API } from '../constants';
+import { NBU_CURRENCY_EXCHANGE_API } from 'constants';
 
 const ExchangeRatesContext = createContext(null);
 
 export const useExchangeRates = () => useContext(ExchangeRatesContext);
 
 export function ExchangeRatesProvider({ children }) {
-  const [exchangeRates, setExchangeRates] = useState(null);
+  const [exchangeRates, setExchangeRates] = useState({
+    response: null,
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
-    const fetchExchangeRatesData = async () => {
+    (async () => {
       try {
         const response = await fetch(NBU_CURRENCY_EXCHANGE_API);
         const data = await response.json();
-        setExchangeRates(data);
+        setExchangeRates({
+          response: data,
+          loading: false,
+          error: null
+        });
       } catch (error) {
-        console.error(error);
+        setExchangeRates({
+          response: null,
+          loading: false,
+          error
+        });
       }
-    };
-    fetchExchangeRatesData();
+    })();
   }, []);
 
   return (
