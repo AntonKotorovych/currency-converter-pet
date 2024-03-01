@@ -8,7 +8,7 @@ export const useExchangeRates = () => useContext(ExchangeRatesContext);
 export function ExchangeRatesProvider({ children }) {
   const [exchangeRates, setExchangeRates] = useState({
     response: null,
-    loading: true,
+    isLoading: true,
     error: null
   });
 
@@ -19,13 +19,13 @@ export function ExchangeRatesProvider({ children }) {
         const data = await response.json();
         setExchangeRates({
           response: data,
-          loading: false,
+          isLoading: false,
           error: null
         });
       } catch (error) {
         setExchangeRates({
           response: null,
-          loading: false,
+          isLoading: false,
           error
         });
       }

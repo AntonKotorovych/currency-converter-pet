@@ -10,7 +10,32 @@
   "rules": {
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 0,
-    "no-var": "error"
+    "no-var": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "external",
+          "builtin",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ]
+      }
+    ],
+    "no-multi-spaces": "error",
+    "key-spacing": "error",
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "arrow-body-style": "off",
+    "array-bracket-spacing": "error",
+    "func-call-spacing": "error",
+    "jsx-quotes": ["error", "prefer-double"],
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "object-curly-spacing": ["error", "always"],
+    "semi": [2, "always"],
+    "semi-style": "error"
   },
   "plugins": ["react", "import", "jsx-a11y", "prettier"],
   "parserOptions": {

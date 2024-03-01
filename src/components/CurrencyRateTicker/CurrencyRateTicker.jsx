@@ -1,37 +1,36 @@
-import styles from './CurrencyRateTicker.module.scss';
+import clsx from 'clsx';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
-import CurrencyItem from './Currency';
 import Spinner from 'components/Spinner';
 import Error from 'components/Error';
-import clsx from 'clsx';
+import CurrencyItem from './Currency';
+
+import styles from './CurrencyRateTicker.module.scss';
 
 export default function CurrencyRateTicker() {
-  const exchangeRates = useExchangeRates();
+  const { response, isLoading, error } = useExchangeRates();
   const classNames = clsx(
     styles['currency-rate-container'],
-    styles['currency-rate-container--spinner']
+    styles['currency-rate-container--status']
   );
-
-  if (!exchangeRates.response) {
+  if (error)
     return (
       <div className={classNames}>
-        {!exchangeRates.error ? (
-          <Spinner />
-        ) : (
-          <Error
-            title={exchangeRates.error.name}
-            message={exchangeRates.error.message}
-          />
-        )}
+        <Error title={error.name} message={error.message} />
       </div>
     );
-  }
+
+  if (!response && isLoading)
+    return (
+      <div className={classNames}>
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className={styles['currency-rate-container']}>
       <ul className={styles['currency-rate-list']}>
-        {exchangeRates.response.map((currency) => (
+        {response.map((currency) => (
           <CurrencyItem
             key={currency.cc}
             title={currency.txt}
