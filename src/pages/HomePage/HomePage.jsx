@@ -1,3 +1,11 @@
+import CurrencyRateTicker from 'components/CurrencyRateTicker';
+import MainTitle from 'components/MainTitle';
+
 export default function HomePage() {
-  return <h1>Hello World!</h1>;
+  return (
+    <>
+      <MainTitle />
+      <CurrencyRateTicker />
+    </>
+  );
 }

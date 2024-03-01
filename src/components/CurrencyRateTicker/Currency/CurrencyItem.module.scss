@@ -1,0 +1,16 @@
+.list-item {
+  margin: 0 3rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    width: 2px;
+    height: 2rem;
+    background-color: $background-color;
+    margin-left: 2.9rem;
+  }
+}

@@ -13,3 +13,18 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+body {
+  background-color: $background-color;
+  display: flex;
+  justify-content: center;
+  font-family: $main-font-family;
+  font-size: $font-size-medium;
+  color: $font-color;
+}
+
+#root {
+  width: 80%;
+  text-align: center;
+  margin-top: 4rem;
+}

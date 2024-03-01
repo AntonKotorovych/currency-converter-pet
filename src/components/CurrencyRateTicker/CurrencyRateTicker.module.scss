@@ -1,0 +1,28 @@
+@keyframes slideAnimation {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.currency-rate-container {
+  height: 3.5rem;
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  background-color: $block-background-color;
+  border-radius: 2rem;
+  box-shadow: 0px 0px 20px $block-shadow-color;
+  &--status {
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.currency-rate-list {
+  display: flex;
+  animation: slideAnimation 500s linear infinite;
+}
