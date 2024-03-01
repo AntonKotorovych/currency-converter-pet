@@ -13,6 +13,7 @@ export default function CurrencyRateTicker() {
     styles['currency-rate-container'],
     styles['currency-rate-container--status']
   );
+
   if (error)
     return (
       <div className={classNames}>
