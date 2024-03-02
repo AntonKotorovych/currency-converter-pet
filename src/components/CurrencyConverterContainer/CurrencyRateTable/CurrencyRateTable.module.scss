@@ -1,10 +1,10 @@
 .currency-rate-table-container {
   height: 80%;
   width: 33%;
-  background-color: $block-background-color;
+  background-color: $block-background-color-main;
   border-radius: 2rem;
   box-shadow: 0px 0px 10px $block-shadow-color;
-  border: 3px $border-table-color solid;
+  border: 3px $border-color solid;
   overflow: auto;
 }
 
@@ -22,6 +22,6 @@
   height: 2.5rem;
 
   & td {
-    border: 2px $border-table-color solid;
+    border: 2px $border-color solid;
   }
 }
