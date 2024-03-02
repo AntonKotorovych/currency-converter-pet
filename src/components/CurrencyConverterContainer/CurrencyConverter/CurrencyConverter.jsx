@@ -1,15 +1,28 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 import styles from './CurrencyConverter.module.scss';
 
 export default function CurrencyConverter() {
-  const [firstCurrencyInput, setFirstCurrencyInput] = useState(1);
-  const [secondCurrencyInput, setSecondCurrencyInput] = useState(undefined);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [firstCurrencyInput, setFirstCurrencyInput] = useState(1000);
+  const [secondCurrencyInput, setSecondCurrencyInput] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState(undefined);
 
   const { response } = useExchangeRates();
+
+  useEffect(() => {
+    if (response && !selectedCurrency) {
+      setSelectedCurrency(response.find((currency) => currency.cc === 'USD'));
+    }
+  }, [response, selectedCurrency]);
+
+  useEffect(() => {
+    if (selectedCurrency && firstCurrencyInput) {
+      const rate = selectedCurrency.rate;
+      setSecondCurrencyInput(parseFloat(firstCurrencyInput / rate).toFixed(2));
+    }
+  }, [selectedCurrency, firstCurrencyInput]);
 
   if (!response) return;
 
@@ -43,8 +56,12 @@ export default function CurrencyConverter() {
               styles['currency-converter-input'],
               styles['currency-converter-input--select']
             )}
-            value={selectedCurrency}
-            onChange={(event) => setSelectedCurrency(event.target.value)}
+            value={selectedCurrency && selectedCurrency.cc}
+            onChange={(event) =>
+              setSelectedCurrency(
+                response.find((currency) => currency.cc === event.target.value)
+              )
+            }
           >
             {response.map((currency) => {
               return (
