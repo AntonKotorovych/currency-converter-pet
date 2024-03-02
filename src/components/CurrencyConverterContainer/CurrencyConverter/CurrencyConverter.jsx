@@ -5,14 +5,13 @@ import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import styles from './CurrencyConverter.module.scss';
 
 export default function CurrencyConverter() {
-  const [firstCurrency, setFirstCurrency] = useState(1);
-  const [secondCurrency, setSecondCurrency] = useState(undefined);
+  const [firstCurrencyInput, setFirstCurrencyInput] = useState(1);
+  const [secondCurrencyInput, setSecondCurrencyInput] = useState(undefined);
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
 
   const { response } = useExchangeRates();
 
   if (!response) return;
-
-  console.log(response);
 
   return (
     <div className={styles['currency-converter']}>
@@ -21,8 +20,8 @@ export default function CurrencyConverter() {
           <input
             className={styles['currency-converter-input']}
             type="number"
-            value={firstCurrency}
-            onChange={(event) => setFirstCurrency(event.target.value)}
+            value={firstCurrencyInput}
+            onChange={(event) => setFirstCurrencyInput(event.target.value)}
           />
         </div>
         <div>
@@ -34,8 +33,8 @@ export default function CurrencyConverter() {
           <input
             className={styles['currency-converter-input']}
             type="number"
-            value={secondCurrency}
-            onChange={(event) => setSecondCurrency(event.target.value)}
+            value={secondCurrencyInput}
+            onChange={(event) => setSecondCurrencyInput(event.target.value)}
           />
         </div>
         <div className={styles['currency-converter-input-container']}>
@@ -44,14 +43,12 @@ export default function CurrencyConverter() {
               styles['currency-converter-input'],
               styles['currency-converter-input--select']
             )}
+            value={selectedCurrency}
+            onChange={(event) => setSelectedCurrency(event.target.value)}
           >
             {response.map((currency) => {
               return (
-                <option
-                  value={currency.cc}
-                  key={currency.cc}
-                  selected={currency.cc === 'USD'}
-                >
+                <option value={currency.cc} key={currency.cc}>
                   {currency.txt}
                 </option>
               );

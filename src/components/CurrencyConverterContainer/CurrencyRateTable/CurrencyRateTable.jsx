@@ -6,7 +6,8 @@ import styles from './CurrencyRateTable.module.scss';
 export default function CurrencyRateTable() {
   const { response } = useExchangeRates();
 
-  console.log(response);
+  if (!response) return;
+
   return (
     <div className={styles['currency-rate-table-container']}>
       <table className={styles['currency-rate-table']}>
@@ -17,17 +18,15 @@ export default function CurrencyRateTable() {
           </tr>
         </thead>
         <tbody>
-          {!response
-            ? null
-            : response.map((currency) => {
-                return (
-                  <CurrencyRateTableRow
-                    key={currency.txt}
-                    name={currency.txt}
-                    rate={currency.rate}
-                  />
-                );
-              })}
+          {response.map((currency) => {
+            return (
+              <CurrencyRateTableRow
+                key={currency.txt}
+                name={currency.txt}
+                rate={currency.rate}
+              />
+            );
+          })}
         </tbody>
       </table>
     </div>
