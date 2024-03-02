@@ -1,0 +1,27 @@
+.currency-rate-table-container {
+  height: 80%;
+  width: 33%;
+  background-color: $block-background-color;
+  border-radius: 2rem;
+  box-shadow: 0px 0px 10px $block-shadow-color;
+  border: 3px $border-table-color solid;
+  overflow: auto;
+}
+
+.currency-rate-table {
+  width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+}
+
+.currency-rate-table__head {
+  height: 3rem;
+}
+
+.currency-rate-table__row {
+  height: 2.5rem;
+
+  & td {
+    border: 2px $border-table-color solid;
+  }
+}
