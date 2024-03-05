@@ -1,24 +1,18 @@
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
-
 import CurrencyRateTableRow from './CurrencyRateTableRow';
 import styles from './CurrencyRateTable.module.scss';
 
-export default function CurrencyRateTable() {
-  const { response } = useExchangeRates();
-
-  if (!response) return;
-
+export default function CurrencyRateTable({ currencyList }) {
   return (
     <div className={styles['currency-rate-table-container']}>
       <table className={styles['currency-rate-table']}>
-        <thead>
+        <thead className={styles.thead}>
           <tr className={styles['currency-rate-table__head']}>
             <th>Валюта</th>
             <th>Курс</th>
           </tr>
         </thead>
         <tbody>
-          {response.map((currency) => {
+          {currencyList.map((currency) => {
             return (
               <CurrencyRateTableRow
                 key={currency.txt}
