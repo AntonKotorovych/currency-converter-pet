@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import { useState, useEffect } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 
 import Input from 'components/Input';
 import Select from 'components/Select/Index';
@@ -16,18 +17,31 @@ export default function CurrencyConverter() {
     secondCurrencyInput: '',
     selectedCurrency: ''
   });
+  const [firstInputValue, setFirstInputValue] = useLocalStorage(
+    'firstInputValue',
+    ''
+  );
+  const [secondInputValue, setSecondInputValue] = useLocalStorage(
+    'secondInputValue',
+    ''
+  );
 
   const { response } = useExchangeRates();
 
   useEffect(() => {
     if (response && !currencyConverterState.selectedCurrency) {
       setCurrencyConverterState({
-        firstCurrencyInput: '',
-        secondCurrencyInput: '',
+        firstCurrencyInput: firstInputValue,
+        secondCurrencyInput: secondInputValue,
         selectedCurrency: response.find((currency) => currency.cc === 'USD')
       });
     }
-  }, [response, currencyConverterState.selectedCurrency]);
+  }, [
+    response,
+    currencyConverterState.selectedCurrency,
+    firstInputValue,
+    secondInputValue
+  ]);
 
   if (!response) {
     return (
@@ -46,17 +60,32 @@ export default function CurrencyConverter() {
     const rate = currencyConverterState.selectedCurrency.rate;
 
     if (event.target.name === 'firstInput') {
+      const newFirstInputValue = event.target.value;
+      const newSecondInputValue = parseFloat(
+        (event.target.value / rate).toFixed(2)
+      );
+
       setCurrencyConverterState({
         ...currencyConverterState,
-        firstCurrencyInput: event.target.value,
-        secondCurrencyInput: parseFloat((event.target.value / rate).toFixed(2))
+        firstCurrencyInput: newFirstInputValue,
+        secondCurrencyInput: newSecondInputValue
       });
+
+      setFirstInputValue(newFirstInputValue);
+      setSecondInputValue(newSecondInputValue);
     } else if (event.target.name === 'secondInput') {
+      const newSecondInputValue = event.target.value;
+      const newFirstInputValue = parseFloat(
+        (event.target.value * rate).toFixed(2)
+      );
+
       setCurrencyConverterState({
         ...currencyConverterState,
-        firstCurrencyInput: parseFloat((event.target.value * rate).toFixed(2)),
-        secondCurrencyInput: event.target.value
+        firstCurrencyInput: newFirstInputValue,
+        secondCurrencyInput: newSecondInputValue
       });
+      setFirstInputValue(newFirstInputValue);
+      setSecondInputValue(newSecondInputValue);
     }
   };
 
