@@ -85,6 +85,7 @@ export default function CurrencyConverter() {
           <Input
             type="number"
             name="firstInput"
+            step="0.01"
             value={currencyConverterState.firstCurrencyInput}
             onChange={handleInputChange}
           />
@@ -95,6 +96,7 @@ export default function CurrencyConverter() {
         <div className={styles['currency-converter__block-secondary']}>
           <Input
             type="number"
+            step="0.01"
             name="secondInput"
             value={currencyConverterState.secondCurrencyInput}
             onChange={handleInputChange}

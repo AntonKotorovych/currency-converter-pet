@@ -1,6 +1,7 @@
 .table-wrapper {
   height: 100%;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
@@ -13,7 +14,6 @@
   box-shadow: 0px 0px 10px $block-shadow-color;
   border: 3px $border-color solid;
   overflow: auto;
-  flex: 1;
 }
 
 .currency-rate-table {
