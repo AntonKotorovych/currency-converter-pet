@@ -1,0 +1,10 @@
+.currency-search {
+  width: 50%;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: column;
+
+  & input {
+    font-size: $font-size-medium;
+  }
+}

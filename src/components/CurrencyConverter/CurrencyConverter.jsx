@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { useState, useEffect } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
@@ -29,7 +31,12 @@ export default function CurrencyConverter() {
 
   if (!response) {
     return (
-      <div className={styles['currency-converter-container']}>
+      <div
+        className={clsx(
+          styles['currency-converter-container'],
+          styles['currency-converter-container--error']
+        )}
+      >
         <Spinner />
       </div>
     );
@@ -76,6 +83,7 @@ export default function CurrencyConverter() {
       <div className={styles['currency-converter']}>
         <div className={styles['currency-converter__block-main']}>
           <Input
+            type="number"
             name="firstInput"
             value={currencyConverterState.firstCurrencyInput}
             onChange={handleInputChange}
@@ -86,6 +94,7 @@ export default function CurrencyConverter() {
         </div>
         <div className={styles['currency-converter__block-secondary']}>
           <Input
+            type="number"
             name="secondInput"
             value={currencyConverterState.secondCurrencyInput}
             onChange={handleInputChange}
