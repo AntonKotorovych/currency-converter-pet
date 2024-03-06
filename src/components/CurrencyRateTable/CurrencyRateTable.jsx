@@ -13,7 +13,7 @@ export default function CurrencyRateTable({ currencyList }) {
     setQuery(newQuery);
     setFilteredList(
       currencyList.filter((currency) =>
-        currency.txt.toLowerCase().startsWith(newQuery.toLowerCase())
+        currency.txt.toLowerCase().includes(newQuery.toLowerCase())
       )
     );
   };

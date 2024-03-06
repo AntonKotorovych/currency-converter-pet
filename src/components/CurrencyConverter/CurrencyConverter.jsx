@@ -17,6 +17,7 @@ export default function CurrencyConverter() {
     secondCurrencyInput: '',
     selectedCurrency: ''
   });
+
   const [firstInputValue, setFirstInputValue] = useLocalStorage(
     'firstInputValue',
     ''
@@ -27,25 +28,20 @@ export default function CurrencyConverter() {
   );
   const [selectedCurrency, setSelectedCurrency] = useLocalStorage(
     'selectedCurrency',
-    ''
+    'USD'
   );
 
   const { response } = useExchangeRates();
 
   useEffect(() => {
     if (response && !currencyConverterState.selectedCurrency) {
-      let currency;
-      if (selectedCurrency === '') {
-        currency = response.find((currency) => currency.cc === 'USD');
-      } else {
-        currency = response.find(
-          (currency) => currency.cc === selectedCurrency
-        );
-      }
+      const newSelectedCurrency = response.find(
+        (currency) => currency.cc === selectedCurrency
+      );
       setCurrencyConverterState({
         firstCurrencyInput: firstInputValue,
         secondCurrencyInput: secondInputValue,
-        selectedCurrency: currency
+        selectedCurrency: newSelectedCurrency
       });
     }
   }, [
