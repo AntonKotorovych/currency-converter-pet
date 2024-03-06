@@ -25,22 +25,35 @@ export default function CurrencyConverter() {
     'secondInputValue',
     ''
   );
+  const [selectedCurrency, setSelectedCurrency] = useLocalStorage(
+    'selectedCurrency',
+    ''
+  );
 
   const { response } = useExchangeRates();
 
   useEffect(() => {
     if (response && !currencyConverterState.selectedCurrency) {
+      let currency;
+      if (selectedCurrency === '') {
+        currency = response.find((currency) => currency.cc === 'USD');
+      } else {
+        currency = response.find(
+          (currency) => currency.cc === selectedCurrency
+        );
+      }
       setCurrencyConverterState({
         firstCurrencyInput: firstInputValue,
         secondCurrencyInput: secondInputValue,
-        selectedCurrency: response.find((currency) => currency.cc === 'USD')
+        selectedCurrency: currency
       });
     }
   }, [
     response,
     currencyConverterState.selectedCurrency,
     firstInputValue,
-    secondInputValue
+    secondInputValue,
+    selectedCurrency
   ]);
 
   if (!response) {
@@ -97,12 +110,17 @@ export default function CurrencyConverter() {
     if (newSelectedCurrency) {
       const newRate = newSelectedCurrency.rate;
 
+      const newSecondInputValue = parseFloat(
+        (currencyConverterState.firstCurrencyInput / newRate).toFixed(2)
+      );
+
+      setSelectedCurrency(newSelectedCurrency.cc);
+      setSecondInputValue(newSecondInputValue);
+
       setCurrencyConverterState({
         ...currencyConverterState,
         selectedCurrency: newSelectedCurrency,
-        secondCurrencyInput: parseFloat(
-          (currencyConverterState.firstCurrencyInput / newRate).toFixed(2)
-        )
+        secondCurrencyInput: newSecondInputValue
       });
     }
   };
@@ -133,6 +151,7 @@ export default function CurrencyConverter() {
           <Select
             onSelectChange={handleCurrencySelectChange}
             options={response}
+            value={selectedCurrency}
           ></Select>
         </div>
       </div>

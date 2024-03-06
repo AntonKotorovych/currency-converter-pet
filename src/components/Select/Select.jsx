@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Select({ options, onSelectChange }) {
+export default function Select({ options, onSelectChange, value }) {
   const [selectedValue, setSelectedValue] = useState('USD');
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const handleSelectChange = (event) => {
     const newValue = event.target.value;
