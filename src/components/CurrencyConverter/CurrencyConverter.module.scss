@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 1.5rem;
   &--error {
     justify-content: center;
   }
@@ -13,23 +13,18 @@
 
 .currency-converter {
   display: flex;
+  justify-content: space-between;
+  gap: 5rem;
   flex: 2;
 }
 
 .currency-converter__block-main {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 1;
-  gap: 1rem;
-  & div {
-    flex: 1;
-    text-align: left;
-  }
+  gap: 0.5rem;
 }
 
 .currency-converter__block-secondary {
   display: flex;
-  flex: 1;
   gap: 1rem;
 }

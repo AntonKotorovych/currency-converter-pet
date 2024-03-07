@@ -1,26 +1,36 @@
-import { useState } from 'react';
-import CurrencySearch from 'components/CurrencySearch';
+import { useMemo, useState, memo } from 'react';
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
+
+import Input from 'components/Input';
 import CurrencyRateTableRow from './CurrencyRateTableRow';
 
 import styles from './CurrencyRateTable.module.scss';
 
-export default function CurrencyRateTable({ currencyList }) {
-  const [query, setQuery] = useState('');
-  const [filteredList, setFilteredList] = useState(currencyList);
+function CurrencyRateTable() {
+  const [searchValue, setSearchSearch] = useState('');
+  const { response: currencyList } = useExchangeRates();
 
-  const handleQueryChange = (event) => {
-    const newQuery = event.target.value;
-    setQuery(newQuery);
-    setFilteredList(
-      currencyList.filter((currency) =>
-        currency.txt.toLowerCase().includes(newQuery.toLowerCase())
-      )
+  const filteredList = useMemo(() => {
+    return currencyList.filter((currency) =>
+      currency.txt.toLowerCase().includes(searchValue.toLowerCase())
     );
+  }, [currencyList, searchValue]);
+
+  const handleSearchChange = (event) => {
+    setSearchSearch(event.target.value);
   };
 
   return (
     <div className={styles['table-wrapper']}>
-      <CurrencySearch onQueryChange={handleQueryChange} queryValue={query} />
+      <div className={styles['currency-search']}>
+        <Input
+          type="text"
+          name="search"
+          value={searchValue}
+          onChange={handleSearchChange}
+          placeholder="Пошук Валюти..."
+        />
+      </div>
       <div className={styles['currency-rate-table-container']}>
         <table className={styles['currency-rate-table']}>
           <thead className={styles.thead}>
@@ -45,3 +55,5 @@ export default function CurrencyRateTable({ currencyList }) {
     </div>
   );
 }
+
+export default memo(CurrencyRateTable);

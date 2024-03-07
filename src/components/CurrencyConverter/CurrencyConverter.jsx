@@ -151,7 +151,7 @@ export default function CurrencyConverter() {
           ></Select>
         </div>
       </div>
-      <CurrencyRateTable currencyList={response} />
+      <CurrencyRateTable />
     </div>
   );
 }

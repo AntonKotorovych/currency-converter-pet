@@ -29,35 +29,29 @@ body {
   color: $font-color;
 }
 
-.input-container {
-  height: 4rem;
-  background-color: $block-background-color-main;
-  border-radius: 4rem;
-  box-shadow: 0px 0px 20px $block-shadow-color;
-  transition: box-shadow 0.1s ease;
-  &:hover {
-    box-shadow: 0px 0px 40px $block-shadow-color;
-  }
-}
-
-input {
-  height: 100%;
+input,
+select {
+  height: 3.5rem;
   width: 100%;
+  background-color: $block-background-color-main;
   color: inherit;
   font-size: $font-size-big;
   text-align: center;
-  background-color: inherit;
-  border-radius: inherit;
+  border-radius: 4rem;
   border: none;
+  box-shadow: 0px 0px 20px $block-shadow-color;
+  transition: box-shadow 0.1s ease;
+
+  &:hover {
+    box-shadow: 0px 0px 40px $block-shadow-color;
+  }
+
+  &::placeholder {
+    color: $input-placeholder-color-main;
+  }
 }
 
 select {
-  height: 100%;
-  width: 100%;
-  color: inherit;
-  text-align: center;
-  border-radius: inherit;
-  border: none;
   font-size: $font-size-medium;
   background-color: $block-background-color-secondary;
 }
