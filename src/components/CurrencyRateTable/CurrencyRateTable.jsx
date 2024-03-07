@@ -2,19 +2,24 @@ import { useMemo, useState, memo } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 import Input from 'components/Input';
+import Spinner from 'components/Spinner';
 import CurrencyRateTableRow from './CurrencyRateTableRow';
 
 import styles from './CurrencyRateTable.module.scss';
 
 function CurrencyRateTable() {
   const [searchValue, setSearchSearch] = useState('');
-  const { response: currencyList } = useExchangeRates();
+  const { response } = useExchangeRates();
 
   const filteredList = useMemo(() => {
-    return currencyList.filter((currency) =>
-      currency.txt.toLowerCase().includes(searchValue.toLowerCase())
-    );
-  }, [currencyList, searchValue]);
+    if (response) {
+      return response.filter((currency) =>
+        currency.txt.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    }
+  }, [response, searchValue]);
+
+  if (!response) return <Spinner />;
 
   const handleSearchChange = (event) => {
     setSearchSearch(event.target.value);
@@ -40,15 +45,16 @@ function CurrencyRateTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredList.map((currency) => {
-              return (
-                <CurrencyRateTableRow
-                  key={currency.txt}
-                  name={currency.txt}
-                  rate={currency.rate}
-                />
-              );
-            })}
+            {response &&
+              filteredList.map((currency) => {
+                return (
+                  <CurrencyRateTableRow
+                    key={currency.txt}
+                    name={currency.txt}
+                    rate={currency.rate}
+                  />
+                );
+              })}
           </tbody>
         </table>
       </div>

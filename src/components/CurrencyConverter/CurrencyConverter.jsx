@@ -1,12 +1,9 @@
-import clsx from 'clsx';
-
 import { useState, useEffect } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 
 import Input from 'components/Input';
 import Select from 'components/Select/Index';
-import CurrencyRateTable from 'components/CurrencyRateTable';
 import Spinner from 'components/Spinner';
 
 import styles from './CurrencyConverter.module.scss';
@@ -53,16 +50,7 @@ export default function CurrencyConverter() {
   ]);
 
   if (!response) {
-    return (
-      <div
-        className={clsx(
-          styles['currency-converter-container'],
-          styles['currency-converter-container--error']
-        )}
-      >
-        <Spinner />
-      </div>
-    );
+    return <Spinner />;
   }
 
   const handleInputChange = (event) => {
@@ -122,36 +110,33 @@ export default function CurrencyConverter() {
   };
 
   return (
-    <div className={styles['currency-converter-container']}>
-      <div className={styles['currency-converter']}>
-        <div className={styles['currency-converter__block-main']}>
-          <Input
-            type="number"
-            name="firstInput"
-            step="0.01"
-            value={currencyConverterState.firstCurrencyInput}
-            onChange={handleInputChange}
-          />
-          <div>
-            <h2>UAH</h2>
-          </div>
-        </div>
-        <div className={styles['currency-converter__block-secondary']}>
-          <Input
-            type="number"
-            step="0.01"
-            name="secondInput"
-            value={currencyConverterState.secondCurrencyInput}
-            onChange={handleInputChange}
-          />
-          <Select
-            onSelectChange={handleCurrencySelectChange}
-            options={response}
-            value={selectedCurrency}
-          ></Select>
+    <div className={styles['currency-converter']}>
+      <div className={styles['currency-converter__block-main']}>
+        <Input
+          type="number"
+          name="firstInput"
+          step="0.01"
+          value={currencyConverterState.firstCurrencyInput}
+          onChange={handleInputChange}
+        />
+        <div>
+          <h2>UAH</h2>
         </div>
       </div>
-      <CurrencyRateTable />
+      <div className={styles['currency-converter__block-secondary']}>
+        <Input
+          type="number"
+          step="0.01"
+          name="secondInput"
+          value={currencyConverterState.secondCurrencyInput}
+          onChange={handleInputChange}
+        />
+        <Select
+          onChange={handleCurrencySelectChange}
+          options={response}
+          value={selectedCurrency}
+        ></Select>
+      </div>
     </div>
   );
 }
