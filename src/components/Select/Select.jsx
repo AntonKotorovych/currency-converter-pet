@@ -1,11 +1,7 @@
-import { useState } from 'react';
-
 export default function Select({ options, onChange, value }) {
-  const [selectedValue, setSelectedValue] = useState(value);
-
+  console.log(value);
   const handleSelectChange = (event) => {
     const newValue = event.target.value;
-    setSelectedValue(newValue);
 
     if (onChange) {
       onChange(newValue);
@@ -14,11 +10,11 @@ export default function Select({ options, onChange, value }) {
 
   return (
     <div className="input-container">
-      <select value={selectedValue} onChange={handleSelectChange}>
-        {options.map((currency) => {
+      <select value={value} onChange={handleSelectChange}>
+        {options.map((option) => {
           return (
-            <option value={currency.cc} key={currency.cc}>
-              {currency.txt}
+            <option value={option.value} key={option.value}>
+              {option.label}
             </option>
           );
         })}

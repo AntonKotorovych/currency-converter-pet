@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
-import { useLocalStorage } from 'hooks/useLocalStorage';
+
+import { useCurrencyState } from 'hooks/useCurrencyState';
 
 import Input from 'components/Input';
 import Select from 'components/Select/Index';
@@ -9,81 +10,49 @@ import Spinner from 'components/Spinner';
 import styles from './CurrencyConverter.module.scss';
 
 export default function CurrencyConverter() {
-  const [currencyConverterState, setCurrencyConverterState] = useState({
-    firstCurrencyInput: '',
-    secondCurrencyInput: '',
-    selectedCurrency: ''
-  });
-
-  const [firstInputValue, setFirstInputValue] = useLocalStorage(
-    'firstInputValue',
-    ''
-  );
-  const [secondInputValue, setSecondInputValue] = useLocalStorage(
-    'secondInputValue',
-    ''
-  );
-  const [selectedCurrency, setSelectedCurrency] = useLocalStorage(
-    'selectedCurrency',
-    'USD'
-  );
+  const { currencyState, onSelectCurrency, onChangeInput, setInitialCurrency } =
+    useCurrencyState();
 
   const { response } = useExchangeRates();
 
   useEffect(() => {
-    if (response && !currencyConverterState.selectedCurrency) {
+    if (response && !currencyState.selectedCurrency) {
       const newSelectedCurrency = response.find(
-        (currency) => currency.cc === selectedCurrency
+        (currency) => currency.cc === 'USD'
       );
-      setCurrencyConverterState({
-        firstCurrencyInput: firstInputValue,
-        secondCurrencyInput: secondInputValue,
-        selectedCurrency: newSelectedCurrency
-      });
+      setInitialCurrency(newSelectedCurrency);
     }
-  }, [
-    response,
-    currencyConverterState.selectedCurrency,
-    firstInputValue,
-    secondInputValue,
-    selectedCurrency
-  ]);
+  }, [response, currencyState.selectedCurrency, setInitialCurrency]);
+
+  const normalizedSelectOptions = useMemo(() => {
+    if (response) {
+      return response.map((currency) => ({
+        value: currency.cc,
+        label: currency.txt
+      }));
+    }
+  }, [response]);
 
   if (!response) {
     return <Spinner />;
   }
 
   const handleInputChange = (event) => {
-    const rate = currencyConverterState.selectedCurrency.rate;
+    const rate = currencyState.selectedCurrency.rate;
+    const value = event.target.value;
+    const name = event.target.name;
 
-    if (event.target.name === 'firstInput') {
-      const newFirstInputValue = event.target.value;
-      const newSecondInputValue = parseFloat(
-        (event.target.value / rate).toFixed(2)
-      );
+    let newFirstInputValue, newSecondInputValue;
 
-      setCurrencyConverterState({
-        ...currencyConverterState,
-        firstCurrencyInput: newFirstInputValue,
-        secondCurrencyInput: newSecondInputValue
-      });
-
-      setFirstInputValue(newFirstInputValue);
-      setSecondInputValue(newSecondInputValue);
-    } else if (event.target.name === 'secondInput') {
-      const newSecondInputValue = event.target.value;
-      const newFirstInputValue = parseFloat(
-        (event.target.value * rate).toFixed(2)
-      );
-
-      setCurrencyConverterState({
-        ...currencyConverterState,
-        firstCurrencyInput: newFirstInputValue,
-        secondCurrencyInput: newSecondInputValue
-      });
-      setFirstInputValue(newFirstInputValue);
-      setSecondInputValue(newSecondInputValue);
+    if (name === 'firstInput') {
+      newFirstInputValue = value;
+      newSecondInputValue = parseFloat((event.target.value / rate).toFixed(2));
+    } else if (name === 'secondInput') {
+      newSecondInputValue = value;
+      newFirstInputValue = parseFloat((event.target.value * rate).toFixed(2));
     }
+
+    onChangeInput(newFirstInputValue, newSecondInputValue);
   };
 
   const handleCurrencySelectChange = (value) => {
@@ -95,17 +64,10 @@ export default function CurrencyConverter() {
       const newRate = newSelectedCurrency.rate;
 
       const newSecondInputValue = parseFloat(
-        (currencyConverterState.firstCurrencyInput / newRate).toFixed(2)
+        (currencyState.firstCurrencyInput / newRate).toFixed(2)
       );
 
-      setSelectedCurrency(newSelectedCurrency.cc);
-      setSecondInputValue(newSecondInputValue);
-
-      setCurrencyConverterState({
-        ...currencyConverterState,
-        selectedCurrency: newSelectedCurrency,
-        secondCurrencyInput: newSecondInputValue
-      });
+      onSelectCurrency(newSecondInputValue, newSelectedCurrency);
     }
   };
 
@@ -116,7 +78,7 @@ export default function CurrencyConverter() {
           type="number"
           name="firstInput"
           step="0.01"
-          value={currencyConverterState.firstCurrencyInput}
+          value={currencyState.firstCurrencyInput}
           onChange={handleInputChange}
         />
         <div>
@@ -128,13 +90,13 @@ export default function CurrencyConverter() {
           type="number"
           step="0.01"
           name="secondInput"
-          value={currencyConverterState.secondCurrencyInput}
+          value={currencyState.secondCurrencyInput}
           onChange={handleInputChange}
         />
         <Select
           onChange={handleCurrencySelectChange}
-          options={response}
-          value={selectedCurrency}
+          options={normalizedSelectOptions}
+          value={currencyState.selectedCurrency?.cc}
         ></Select>
       </div>
     </div>
