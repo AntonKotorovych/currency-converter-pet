@@ -10,23 +10,13 @@ import Spinner from 'components/Spinner';
 import styles from './CurrencyConverter.module.scss';
 
 export default function CurrencyConverter() {
-  const { currencyState, onSelectCurrency, onChangeInput, setInitialCurrency } =
-    useCurrencyState();
+  const { currencyState, onSelectCurrency, onChangeInput } = useCurrencyState();
 
   const { response } = useExchangeRates();
 
-  useEffect(() => {
-    if (response && !currencyState.selectedCurrency) {
-      const newSelectedCurrency = response.find(
-        (currency) => currency.cc === 'USD'
-      );
-      setInitialCurrency(newSelectedCurrency);
-    }
-  }, [response, currencyState.selectedCurrency, setInitialCurrency]);
-
   const normalizedSelectOptions = useMemo(() => {
     if (response) {
-      return response.map((currency) => ({
+      return response.map(currency => ({
         value: currency.cc,
         label: currency.txt
       }));
@@ -37,7 +27,7 @@ export default function CurrencyConverter() {
     return <Spinner />;
   }
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const rate = currencyState.selectedCurrency.rate;
     const value = event.target.value;
     const name = event.target.name;
@@ -55,20 +45,12 @@ export default function CurrencyConverter() {
     onChangeInput(newFirstInputValue, newSecondInputValue);
   };
 
-  const handleCurrencySelectChange = (value) => {
+  const handleSelectCurrency = value => {
     const newSelectedCurrency = response.find(
-      (currency) => currency.cc === value
+      currency => currency.cc === value
     );
 
-    if (newSelectedCurrency) {
-      const newRate = newSelectedCurrency.rate;
-
-      const newSecondInputValue = parseFloat(
-        (currencyState.firstCurrencyInput / newRate).toFixed(2)
-      );
-
-      onSelectCurrency(newSecondInputValue, newSelectedCurrency);
-    }
+    if (newSelectedCurrency) onSelectCurrency(newSelectedCurrency);
   };
 
   return (
@@ -77,13 +59,12 @@ export default function CurrencyConverter() {
         <Input
           type="number"
           name="firstInput"
+          id="firstInput"
           step="0.01"
           value={currencyState.firstCurrencyInput}
           onChange={handleInputChange}
         />
-        <div>
-          <h2>UAH</h2>
-        </div>
+        <label htmlFor="firstInput">UAH</label>
       </div>
       <div className={styles['currency-converter__block-secondary']}>
         <Input
@@ -94,10 +75,10 @@ export default function CurrencyConverter() {
           onChange={handleInputChange}
         />
         <Select
-          onChange={handleCurrencySelectChange}
+          onChange={handleSelectCurrency}
           options={normalizedSelectOptions}
           value={currencyState.selectedCurrency?.cc}
-        ></Select>
+        />
       </div>
     </div>
   );

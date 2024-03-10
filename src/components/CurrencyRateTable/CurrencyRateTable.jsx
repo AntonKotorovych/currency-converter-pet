@@ -12,11 +12,9 @@ function CurrencyRateTable() {
   const { response } = useExchangeRates();
 
   const filteredList = useMemo(() => {
-    if (response) {
-      return response.filter((currency) =>
-        currency.txt.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
+    return response?.filter((currency) =>
+      currency.txt.toLowerCase().includes(searchValue.toLowerCase())
+    );
   }, [response, searchValue]);
 
   if (!response) return <Spinner />;
@@ -45,16 +43,24 @@ function CurrencyRateTable() {
             </tr>
           </thead>
           <tbody>
-            {response &&
-              filteredList.map((currency) => {
-                return (
-                  <CurrencyRateTableRow
-                    key={currency.txt}
-                    name={currency.txt}
-                    rate={currency.rate}
-                  />
-                );
-              })}
+            {filteredList.length === 0 && (
+              <tr>
+                <td className={styles['currency-is-not-found']}>
+                  Валюту не знайдено
+                </td>
+              </tr>
+            )}
+            {filteredList
+              ? filteredList.map((currency) => {
+                  return (
+                    <CurrencyRateTableRow
+                      key={currency.txt}
+                      name={currency.txt}
+                      rate={currency.rate}
+                    />
+                  );
+                })
+              : null}
           </tbody>
         </table>
       </div>

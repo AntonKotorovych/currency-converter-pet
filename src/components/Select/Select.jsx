@@ -1,5 +1,4 @@
 export default function Select({ options, onChange, value }) {
-  console.log(value);
   const handleSelectChange = (event) => {
     const newValue = event.target.value;
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 export const useCurrencyState = () => {
   const [currencyState, setCurrencyState] = useState({
@@ -7,18 +8,29 @@ export const useCurrencyState = () => {
     selectedCurrency: undefined
   });
 
+  const { response } = useExchangeRates();
+
+  useEffect(() => {
+    if (response && !currencyState.selectedCurrency) {
+      const newSelectedCurrency = response.find(
+        currency => currency.cc === 'USD'
+      );
+      setCurrencyState({
+        ...currencyState,
+        secondCurrencyInput: 1,
+        selectedCurrency: newSelectedCurrency
+      });
+    }
+  }, [response, currencyState.selectedCurrency, currencyState]);
+
   useEffect(() => {
     const storedCurrencyState = localStorage.getItem('currencyState');
     if (storedCurrencyState) setCurrencyState(JSON.parse(storedCurrencyState));
   }, []);
 
-  const onSelectCurrency = (newSecondInputValue, newSelectedCurrency) => {
-    setCurrencyState({
-      ...currencyState,
-      secondCurrencyInput: newSecondInputValue,
-      selectedCurrency: newSelectedCurrency
-    });
-  };
+  useEffect(() => {
+    localStorage.setItem('currencyState', JSON.stringify(currencyState));
+  }, [currencyState]);
 
   const onChangeInput = (newFirstInputValue, newSecondInputValue) => {
     setCurrencyState({
@@ -28,16 +40,19 @@ export const useCurrencyState = () => {
     });
   };
 
-  const setInitialCurrency = (initialCurrency) => {
+  const onSelectCurrency = newSelectedCurrency => {
+    const newRate = newSelectedCurrency.rate;
+
+    const newSecondInputValue = parseFloat(
+      (currencyState.firstCurrencyInput / newRate).toFixed(2)
+    );
+
     setCurrencyState({
       ...currencyState,
-      selectedCurrency: initialCurrency
+      secondCurrencyInput: newSecondInputValue,
+      selectedCurrency: newSelectedCurrency
     });
   };
 
-  useEffect(() => {
-    localStorage.setItem('currencyState', JSON.stringify(currencyState));
-  }, [currencyState]);
-
-  return { currencyState, onSelectCurrency, onChangeInput, setInitialCurrency };
+  return { currencyState, onSelectCurrency, onChangeInput };
 };
