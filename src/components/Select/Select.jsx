@@ -1,7 +1,8 @@
-export default function Select({ options, onChange, value }) {
-  const handleSelectChange = (event) => {
-    const newValue = event.target.value;
+import { memo } from 'react';
 
+function Select({ options, onChange, value }) {
+  const handleSelectChange = event => {
+    const newValue = event.target.value;
     if (onChange) {
       onChange(newValue);
     }
@@ -10,7 +11,7 @@ export default function Select({ options, onChange, value }) {
   return (
     <div className="input-container">
       <select value={value} onChange={handleSelectChange}>
-        {options.map((option) => {
+        {options.map(option => {
           return (
             <option value={option.value} key={option.value}>
               {option.label}
@@ -21,3 +22,5 @@ export default function Select({ options, onChange, value }) {
     </div>
   );
 }
+
+export default memo(Select);

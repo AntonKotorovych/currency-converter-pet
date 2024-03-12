@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from 'react';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { useCallback } from 'react';
 
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import { useCurrencyState } from 'hooks/useCurrencyState';
 
 import Input from 'components/Input';
-import Select from 'components/Select/Index';
+import CurrencySelect from 'components/CurrencySelect';
 import Spinner from 'components/Spinner';
 
 import styles from './CurrencyConverter.module.scss';
@@ -14,44 +14,28 @@ export default function CurrencyConverter() {
 
   const { response } = useExchangeRates();
 
-  const normalizedSelectOptions = useMemo(() => {
-    if (response) {
-      return response.map(currency => ({
-        value: currency.cc,
-        label: currency.txt
-      }));
-    }
-  }, [response]);
+  const handleInputChange = useCallback(
+    event => {
+      onChangeInput(event);
+    },
+    [onChangeInput]
+  );
+
+  const handleSelectCurrency = useCallback(
+    value => {
+      const newSelectedCurrency = response.find(
+        currency => currency.cc === value
+      );
+      if (newSelectedCurrency) {
+        onSelectCurrency(newSelectedCurrency);
+      }
+    },
+    [response, onSelectCurrency]
+  );
 
   if (!response) {
     return <Spinner />;
   }
-
-  const handleInputChange = event => {
-    const rate = currencyState.selectedCurrency.rate;
-    const value = event.target.value;
-    const name = event.target.name;
-
-    let newFirstInputValue, newSecondInputValue;
-
-    if (name === 'firstInput') {
-      newFirstInputValue = value;
-      newSecondInputValue = parseFloat((event.target.value / rate).toFixed(2));
-    } else if (name === 'secondInput') {
-      newSecondInputValue = value;
-      newFirstInputValue = parseFloat((event.target.value * rate).toFixed(2));
-    }
-
-    onChangeInput(newFirstInputValue, newSecondInputValue);
-  };
-
-  const handleSelectCurrency = value => {
-    const newSelectedCurrency = response.find(
-      currency => currency.cc === value
-    );
-
-    if (newSelectedCurrency) onSelectCurrency(newSelectedCurrency);
-  };
 
   return (
     <div className={styles['currency-converter']}>
@@ -74,9 +58,8 @@ export default function CurrencyConverter() {
           value={currencyState.secondCurrencyInput}
           onChange={handleInputChange}
         />
-        <Select
+        <CurrencySelect
           onChange={handleSelectCurrency}
-          options={normalizedSelectOptions}
           value={currencyState.selectedCurrency?.cc}
         />
       </div>

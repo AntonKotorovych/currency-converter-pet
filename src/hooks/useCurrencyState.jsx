@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { DEFAULT_SECOND_INPUT_VALUE } from 'constants/constants';
 
 export const useCurrencyState = () => {
   const [currencyState, setCurrencyState] = useState({
     firstCurrencyInput: '',
     secondCurrencyInput: '',
-    selectedCurrency: undefined
+    selectedCurrency: null
   });
 
   const { response } = useExchangeRates();
@@ -16,8 +17,10 @@ export const useCurrencyState = () => {
         currency => currency.cc === 'USD'
       );
       setCurrencyState({
-        ...currencyState,
-        secondCurrencyInput: 1,
+        firstCurrencyInput: parseFloat(
+          (DEFAULT_SECOND_INPUT_VALUE * newSelectedCurrency.rate).toFixed(2)
+        ),
+        secondCurrencyInput: DEFAULT_SECOND_INPUT_VALUE,
         selectedCurrency: newSelectedCurrency
       });
     }
@@ -32,27 +35,51 @@ export const useCurrencyState = () => {
     localStorage.setItem('currencyState', JSON.stringify(currencyState));
   }, [currencyState]);
 
-  const onChangeInput = (newFirstInputValue, newSecondInputValue) => {
-    setCurrencyState({
-      ...currencyState,
-      firstCurrencyInput: newFirstInputValue,
-      secondCurrencyInput: newSecondInputValue
-    });
-  };
+  const onChangeInput = useCallback(
+    event => {
+      const rate = currencyState?.selectedCurrency?.rate;
+      let { value, name } = event.target;
 
-  const onSelectCurrency = newSelectedCurrency => {
-    const newRate = newSelectedCurrency.rate;
+      if (value < 0) return;
 
-    const newSecondInputValue = parseFloat(
-      (currencyState.firstCurrencyInput / newRate).toFixed(2)
-    );
+      const ratios = {
+        firstInput: {
+          newFirstInputValue: value,
+          newSecondInputValue: parseFloat((value / rate).toFixed(2))
+        },
+        secondInput: {
+          newSecondInputValue: value,
+          newFirstInputValue: parseFloat((value * rate).toFixed(2))
+        }
+      };
 
-    setCurrencyState({
-      ...currencyState,
-      secondCurrencyInput: newSecondInputValue,
-      selectedCurrency: newSelectedCurrency
-    });
-  };
+      const { newFirstInputValue, newSecondInputValue } = ratios[name] || {};
+
+      setCurrencyState(prevState => ({
+        ...prevState,
+        firstCurrencyInput: newFirstInputValue,
+        secondCurrencyInput: newSecondInputValue
+      }));
+    },
+    [currencyState?.selectedCurrency]
+  );
+
+  const onSelectCurrency = useCallback(
+    newSelectedCurrency => {
+      const newRate = newSelectedCurrency.rate;
+
+      const newSecondInputValue = parseFloat(
+        (currencyState.firstCurrencyInput / newRate).toFixed(2)
+      );
+
+      setCurrencyState(prevState => ({
+        ...prevState,
+        secondCurrencyInput: newSecondInputValue,
+        selectedCurrency: newSelectedCurrency
+      }));
+    },
+    [currencyState]
+  );
 
   return { currencyState, onSelectCurrency, onChangeInput };
 };
