@@ -12,28 +12,18 @@ import styles from './CurrencyConverter.module.scss';
 export default function CurrencyConverter() {
   const { currencyState, onChangeInput, onSelectCurrency } = useCurrencyState();
 
-  const { response } = useExchangeRates();
+  const { isLoading } = useExchangeRates();
 
   const handleInputChange = useCallback(
     event => {
-      const inputData = {
-        name: event.target.name,
-        value: event.target.value
-      };
+      const { name, value } = event.target;
 
-      onChangeInput(inputData);
+      onChangeInput({ name, value });
     },
     [onChangeInput]
   );
 
-  const handleCurrencyChange = useCallback(
-    currency => {
-      onSelectCurrency(currency);
-    },
-    [onSelectCurrency]
-  );
-
-  if (!response) {
+  if (isLoading) {
     return <Spinner />;
   }
 
@@ -60,7 +50,7 @@ export default function CurrencyConverter() {
         />
         <CurrencySelect
           value={currencyState.selectedCurrency?.cc}
-          onChange={handleCurrencyChange}
+          onChange={onSelectCurrency}
         />
       </div>
     </div>

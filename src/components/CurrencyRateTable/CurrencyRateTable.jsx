@@ -9,7 +9,7 @@ import styles from './CurrencyRateTable.module.scss';
 
 export default function CurrencyRateTable() {
   const [searchValue, setSearchSearch] = useState('');
-  const { response } = useExchangeRates();
+  const { response, isLoading } = useExchangeRates();
 
   const filteredList = useMemo(() => {
     return response?.filter(currency =>
@@ -17,7 +17,7 @@ export default function CurrencyRateTable() {
     );
   }, [response, searchValue]);
 
-  if (!response) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   const handleSearchChange = event => {
     setSearchSearch(event.target.value);
