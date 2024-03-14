@@ -3,20 +3,20 @@
   justify-content: space-between;
   gap: 5rem;
   flex: 2;
-}
 
-.currency-converter__block-main {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  &__block-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
-  & label {
-    font-size: $font-size-big;
-    font-weight: bold;
+    & label {
+      font-size: $font-size-big;
+      font-weight: bold;
+    }
   }
-}
 
-.currency-converter__block-secondary {
-  display: flex;
-  gap: 1rem;
+  &__block-secondary {
+    display: flex;
+    gap: 1rem;
+  }
 }

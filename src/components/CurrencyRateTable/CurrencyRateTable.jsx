@@ -1,4 +1,4 @@
-import { useMemo, useState, memo } from 'react';
+import { useMemo, useState } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 import Input from 'components/Input';
@@ -7,19 +7,19 @@ import CurrencyRateTableRow from './CurrencyRateTableRow';
 
 import styles from './CurrencyRateTable.module.scss';
 
-function CurrencyRateTable() {
+export default function CurrencyRateTable() {
   const [searchValue, setSearchSearch] = useState('');
   const { response } = useExchangeRates();
 
   const filteredList = useMemo(() => {
-    return response?.filter((currency) =>
+    return response?.filter(currency =>
       currency.txt.toLowerCase().includes(searchValue.toLowerCase())
     );
   }, [response, searchValue]);
 
   if (!response) return <Spinner />;
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = event => {
     setSearchSearch(event.target.value);
   };
 
@@ -43,29 +43,26 @@ function CurrencyRateTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredList.length === 0 && (
+            {filteredList.length ? (
+              filteredList.map(currency => {
+                return (
+                  <CurrencyRateTableRow
+                    key={currency.txt}
+                    name={currency.txt}
+                    rate={currency.rate}
+                  />
+                );
+              })
+            ) : (
               <tr>
                 <td className={styles['currency-is-not-found']}>
                   Валюту не знайдено
                 </td>
               </tr>
             )}
-            {filteredList
-              ? filteredList.map((currency) => {
-                  return (
-                    <CurrencyRateTableRow
-                      key={currency.txt}
-                      name={currency.txt}
-                      rate={currency.rate}
-                    />
-                  );
-                })
-              : null}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
-
-export default memo(CurrencyRateTable);

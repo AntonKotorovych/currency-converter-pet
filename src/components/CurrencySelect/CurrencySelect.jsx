@@ -1,10 +1,28 @@
-import { memo } from 'react';
-import { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { memo, useMemo, useCallback } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import Select from 'components/Select';
 
-function CurrencySelect({ onChange, value }) {
+CurrencySelect.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired
+};
+
+function CurrencySelect({ value, onChange }) {
   const { response } = useExchangeRates();
+
+  const handleSelectCurrency = useCallback(
+    value => {
+      const newSelectedCurrency = response.find(
+        currency => currency.cc === value
+      );
+      if (newSelectedCurrency) {
+        onChange(newSelectedCurrency);
+      }
+    },
+    [response, onChange]
+  );
+
   const normalizedOptions = useMemo(() => {
     return response?.map(currency => ({
       value: currency.cc,
@@ -13,7 +31,11 @@ function CurrencySelect({ onChange, value }) {
   }, [response]);
 
   return (
-    <Select options={normalizedOptions} value={value} onChange={onChange} />
+    <Select
+      options={normalizedOptions}
+      value={value}
+      onChange={handleSelectCurrency}
+    />
   );
 }
 

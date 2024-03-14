@@ -1,4 +1,16 @@
 import { memo } from 'react';
+import PropTypes from 'prop-types';
+
+Select.propTypes = {
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  ),
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired
+};
 
 function Select({ options, onChange, value }) {
   const handleSelectChange = event => {

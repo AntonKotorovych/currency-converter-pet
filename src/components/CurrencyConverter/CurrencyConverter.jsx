@@ -10,27 +10,27 @@ import Spinner from 'components/Spinner';
 import styles from './CurrencyConverter.module.scss';
 
 export default function CurrencyConverter() {
-  const { currencyState, onSelectCurrency, onChangeInput } = useCurrencyState();
+  const { currencyState, onChangeInput, onSelectCurrency } = useCurrencyState();
 
   const { response } = useExchangeRates();
 
   const handleInputChange = useCallback(
     event => {
-      onChangeInput(event);
+      const inputData = {
+        name: event.target.name,
+        value: event.target.value
+      };
+
+      onChangeInput(inputData);
     },
     [onChangeInput]
   );
 
-  const handleSelectCurrency = useCallback(
-    value => {
-      const newSelectedCurrency = response.find(
-        currency => currency.cc === value
-      );
-      if (newSelectedCurrency) {
-        onSelectCurrency(newSelectedCurrency);
-      }
+  const handleCurrencyChange = useCallback(
+    currency => {
+      onSelectCurrency(currency);
     },
-    [response, onSelectCurrency]
+    [onSelectCurrency]
   );
 
   if (!response) {
@@ -59,8 +59,8 @@ export default function CurrencyConverter() {
           onChange={handleInputChange}
         />
         <CurrencySelect
-          onChange={handleSelectCurrency}
           value={currencyState.selectedCurrency?.cc}
+          onChange={handleCurrencyChange}
         />
       </div>
     </div>

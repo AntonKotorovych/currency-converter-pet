@@ -1,44 +1,19 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
-import { DEFAULT_SECOND_INPUT_VALUE } from 'constants/constants';
 
 export const useCurrencyState = () => {
   const [currencyState, setCurrencyState] = useState({
     firstCurrencyInput: '',
-    secondCurrencyInput: '',
+    secondCurrencyInput: 1,
     selectedCurrency: null
   });
 
   const { response } = useExchangeRates();
 
-  useEffect(() => {
-    if (response && !currencyState.selectedCurrency) {
-      const newSelectedCurrency = response.find(
-        currency => currency.cc === 'USD'
-      );
-      setCurrencyState({
-        firstCurrencyInput: parseFloat(
-          (DEFAULT_SECOND_INPUT_VALUE * newSelectedCurrency.rate).toFixed(2)
-        ),
-        secondCurrencyInput: DEFAULT_SECOND_INPUT_VALUE,
-        selectedCurrency: newSelectedCurrency
-      });
-    }
-  }, [response, currencyState.selectedCurrency, currencyState]);
-
-  useEffect(() => {
-    const storedCurrencyState = localStorage.getItem('currencyState');
-    if (storedCurrencyState) setCurrencyState(JSON.parse(storedCurrencyState));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('currencyState', JSON.stringify(currencyState));
-  }, [currencyState]);
-
   const onChangeInput = useCallback(
-    event => {
+    inputData => {
       const rate = currencyState?.selectedCurrency?.rate;
-      let { value, name } = event.target;
+      let { value, name } = inputData;
 
       if (value < 0) return;
 
@@ -64,22 +39,31 @@ export const useCurrencyState = () => {
     [currencyState?.selectedCurrency]
   );
 
-  const onSelectCurrency = useCallback(
-    newSelectedCurrency => {
-      const newRate = newSelectedCurrency.rate;
+  const onSelectCurrency = useCallback(newSelectedCurrency => {
+    const newRate = newSelectedCurrency.rate;
 
-      const newSecondInputValue = parseFloat(
-        (currencyState.firstCurrencyInput / newRate).toFixed(2)
-      );
+    setCurrencyState(prevState => ({
+      ...prevState,
+      firstCurrencyInput: parseFloat(
+        (prevState.secondCurrencyInput * newRate).toFixed(2)
+      ),
+      selectedCurrency: newSelectedCurrency
+    }));
+  }, []);
 
-      setCurrencyState(prevState => ({
-        ...prevState,
-        secondCurrencyInput: newSecondInputValue,
-        selectedCurrency: newSelectedCurrency
-      }));
-    },
-    [currencyState]
-  );
+  useEffect(() => {
+    if (response && !currencyState.selectedCurrency)
+      onSelectCurrency(response.find(currency => currency.cc === 'USD'));
+  }, [response, currencyState.selectedCurrency, onSelectCurrency]);
+
+  useEffect(() => {
+    const storedCurrencyState = localStorage.getItem('currencyState');
+    if (storedCurrencyState) setCurrencyState(JSON.parse(storedCurrencyState));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('currencyState', JSON.stringify(currencyState));
+  }, [currencyState]);
 
   return { currencyState, onSelectCurrency, onChangeInput };
 };
