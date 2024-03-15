@@ -1,0 +1,64 @@
+.table-wrapper {
+  height: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.currency-rate-table-container {
+  width: 100%;
+  background-color: $block-background-color-main;
+  border-radius: 2rem;
+  box-shadow: 0px 0px 10px $block-shadow-color;
+  border: 3px $border-color solid;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.currency-rate-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  & th:first-child {
+    width: 75%;
+  }
+
+  & th:last-child {
+    width: 25%;
+  }
+}
+
+thead {
+  background-color: $block-background-color-thirdly;
+  position: sticky;
+  top: 0;
+}
+
+.currency-rate-table__head {
+  height: 3rem;
+}
+
+.currency-rate-table__row {
+  height: 2.5rem;
+  & td {
+    border: 2px $border-color solid;
+    border-left: none;
+  }
+}
+
+.currency-search {
+  width: 50%;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: column;
+
+  & input {
+    font-size: $font-size-medium;
+  }
+}
+
+.currency-is-not-found {
+  padding: 1rem;
+}
