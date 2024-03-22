@@ -1,11 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import { describe, test, expect } from '@jest/globals';
-import Input from 'components/Input';
+import Input from '..';
 
 describe('input', () => {
   test('input renders', () => {
     render(<Input />);
-    const inputElement = screen.getByRole('spinbutton');
-    expect(inputElement).toBeInTheDocument();
+    const inputElement = screen.getByRole('textbox');
+    expect(inputElement).toBeInTheDocument(); // тут IDE не підказує метод toBeInTheDocument а також expect.
   });
 });
