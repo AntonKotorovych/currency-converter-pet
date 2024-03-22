@@ -8,12 +8,11 @@ export const useCurrencyState = () => {
     selectedCurrency: null
   });
 
-  const { response } = useExchangeRates();
+  const { response, error } = useExchangeRates();
 
   const onChangeInput = useCallback(
-    inputData => {
+    ({ value, name }) => {
       const rate = currencyState?.selectedCurrency?.rate;
-      let { value, name } = inputData;
 
       if (value < 0) return;
 
@@ -50,6 +49,17 @@ export const useCurrencyState = () => {
       selectedCurrency: newSelectedCurrency
     }));
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      localStorage.clear();
+      setCurrencyState(() => ({
+        firstCurrencyInput: '',
+        secondCurrencyInput: '',
+        selectedCurrency: null
+      }));
+    }
+  }, [error]);
 
   useEffect(() => {
     if (response && !currencyState.selectedCurrency)

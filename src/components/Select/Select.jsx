@@ -23,7 +23,7 @@ function Select({ options, onChange, value }) {
   return (
     <div className="input-container">
       <select value={value} onChange={handleSelectChange}>
-        {options.map(option => {
+        {options?.map(option => {
           return (
             <option value={option.value} key={option.value}>
               {option.label}

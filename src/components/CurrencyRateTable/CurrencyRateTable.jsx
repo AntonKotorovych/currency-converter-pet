@@ -3,13 +3,14 @@ import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 import Input from 'components/Input';
 import Spinner from 'components/Spinner';
+import Error from 'components/Error';
 import CurrencyRateTableRow from './CurrencyRateTableRow';
 
 import styles from './CurrencyRateTable.module.scss';
 
 export default function CurrencyRateTable() {
   const [searchValue, setSearchSearch] = useState('');
-  const { response, isLoading } = useExchangeRates();
+  const { response, isLoading, error } = useExchangeRates();
 
   const filteredList = useMemo(() => {
     return response?.filter(currency =>
@@ -18,6 +19,14 @@ export default function CurrencyRateTable() {
   }, [response, searchValue]);
 
   if (isLoading) return <Spinner />;
+
+  if (error) {
+    return (
+      <div className={styles['table-wrapper']}>
+        <Error title={error.name} message={error.message} />
+      </div>
+    );
+  }
 
   const handleSearchChange = event => {
     setSearchSearch(event.target.value);
