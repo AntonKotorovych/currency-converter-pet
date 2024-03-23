@@ -14,7 +14,6 @@ Select.propTypes = {
 
 function Select({ options, onChange, value }) {
   const handleSelectChange = event => {
-    console.log(event.target.value);
     const newValue = event.target.value;
     if (onChange) {
       onChange(newValue);
