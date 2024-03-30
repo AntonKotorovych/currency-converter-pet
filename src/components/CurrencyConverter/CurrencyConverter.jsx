@@ -37,16 +37,19 @@ export default function CurrencyConverter() {
           step="0.01"
           value={currencyState.firstCurrencyInput}
           onChange={handleInputChange}
+          data-testid="firstInput"
         />
         <label htmlFor="firstInput">UAH</label>
       </div>
       <div className={styles['currency-converter__block-secondary']}>
         <Input
           type="number"
-          step="0.01"
           name="secondInput"
+          id="secondInput"
+          step="0.01"
           value={currencyState.secondCurrencyInput}
           onChange={handleInputChange}
+          data-testid="secondInput"
         />
         <CurrencySelect
           value={currencyState.selectedCurrency?.cc}

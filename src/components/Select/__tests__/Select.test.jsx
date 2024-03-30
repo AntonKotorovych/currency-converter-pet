@@ -2,32 +2,10 @@ import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import Select from '..';
 
-describe('render select', () => {
-  const props = {
-    options: [
-      {
-        value: 'USD',
-        label: 'Долар США'
-      }
-    ],
-    value: 'USD',
-    onChange: jest.fn()
-  };
-  test('select renders', () => {
-    render(<Select />);
-    const selectElement = screen.getByRole('combobox');
-    expect(selectElement).toBeInTheDocument();
-  });
+describe('select', () => {
+  let onChangeSelect = jest.fn();
 
-  test('select renders with props', () => {
-    render(<Select {...props} />);
-    const selectElement = screen.getByRole('combobox');
-    expect(selectElement).toBeInTheDocument();
-  });
-});
-
-describe('user interacts with options', () => {
-  const props = {
+  const requiredProps = {
     options: [
       {
         value: 'USD',
@@ -36,17 +14,36 @@ describe('user interacts with options', () => {
       {
         value: 'AUD',
         label: 'Австралійський долар'
+      },
+      {
+        value: 'EUR',
+        label: 'Євро'
       }
     ],
     value: 'USD',
-    onChange: jest.fn()
+    onChange: onChangeSelect
   };
 
-  test('select renders', async () => {
-    render(<Select {...props} />);
-    const selectElement = screen.getByRole('combobox');
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    await user.selectOptions(selectElement, 'AUD');
-    expect(props.onChange).toHaveBeenCalled();
+  const renderComponent = (props = requiredProps) =>
+    render(<Select {...props} />);
+
+  test('renders component correctly', () => {
+    renderComponent();
+
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  describe('user interacts with options', () => {
+    test('user change option', async () => {
+      renderComponent();
+
+      await user.selectOptions(screen.getByRole('combobox'), 'AUD');
+
+      expect(onChangeSelect).toHaveBeenCalledWith('AUD');
+    });
   });
 });
