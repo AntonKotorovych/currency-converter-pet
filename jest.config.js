@@ -3,6 +3,7 @@
 const config = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx}'],
+  coverageReporters: ['text', 'json-summary', 'html'],
   coverageDirectory: 'coverage',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/setupTests.js'],

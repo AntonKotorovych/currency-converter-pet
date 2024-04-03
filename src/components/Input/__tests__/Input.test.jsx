@@ -3,13 +3,13 @@ import user from '@testing-library/user-event';
 import Input from '..';
 
 describe('Input', () => {
-  let onChangeInput = jest.fn();
+  const onChange = jest.fn();
 
   const requiredProps = {
     type: 'number',
     name: 'firstInput',
     value: 1,
-    onChange: onChangeInput,
+    onChange,
     'data-testid': 'firstInput'
   };
 
@@ -26,13 +26,13 @@ describe('Input', () => {
     expect(screen.queryByTestId('firstInput')).toBeInTheDocument();
   });
 
-  describe('user interacts with the input', () => {
-    test('when user types values', async () => {
+  describe('when user types values', () => {
+    test('calls onChange()', async () => {
       renderComponent();
 
       await user.type(screen.queryByTestId('firstInput'), '1');
 
-      expect(onChangeInput).toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalled();
     });
   });
 });

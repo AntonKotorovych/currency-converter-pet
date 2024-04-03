@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import Select from '..';
 
-describe('select', () => {
-  let onChangeSelect = jest.fn();
+describe('Select', () => {
+  const onChange = jest.fn();
 
   const requiredProps = {
     options: [
@@ -21,7 +21,7 @@ describe('select', () => {
       }
     ],
     value: 'USD',
-    onChange: onChangeSelect
+    onChange
   };
 
   beforeEach(() => {
@@ -37,13 +37,13 @@ describe('select', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
-  describe('user interacts with options', () => {
-    test('user change option', async () => {
+  describe('when user selects value', () => {
+    test('calls onChange() with correct value', async () => {
       renderComponent();
 
       await user.selectOptions(screen.getByRole('combobox'), 'AUD');
 
-      expect(onChangeSelect).toHaveBeenCalledWith('AUD');
+      expect(onChange).toHaveBeenCalledWith('AUD');
     });
   });
 });
