@@ -6,12 +6,13 @@ describe('MainTitle', () => {
     new Date()
   );
 
-  const renderComponent = () => render(<MainTitle />);
-
   test('renders component correctly', () => {
-    renderComponent();
+    render(<MainTitle />);
+
     const titleElement = screen.getByRole('heading', { level: 1 });
+
     expect(titleElement).toBeInTheDocument();
+
     expect(titleElement).toHaveTextContent(
       `Актуальні Курси Валют станом на ${expectedDateFormat}`
     );
