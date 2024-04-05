@@ -9,7 +9,7 @@ Select.propTypes = {
     })
   ),
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func
 };
 
 function Select({ options, onChange, value }) {
