@@ -6,7 +6,8 @@ Input.propTypes = {
   id: PropTypes.string,
   step: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  'data-testid': PropTypes.string
 };
 
 export default function Input(props) {
