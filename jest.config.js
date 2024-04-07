@@ -13,7 +13,8 @@ const config = {
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy'
   },
-  moduleFileExtensions: ['js', 'jsx']
+  moduleFileExtensions: ['js', 'jsx'],
+  modulePaths: ['<rootDir>/src']
 };
 
 export default config;

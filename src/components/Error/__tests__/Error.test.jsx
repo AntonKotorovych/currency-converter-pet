@@ -8,6 +8,7 @@ describe('Error', () => {
 
   test('renders component correctly', () => {
     renderComponent();
+
     expect(screen.getByRole('heading', { level: 3 })).toBeInTheDocument();
   });
 });
