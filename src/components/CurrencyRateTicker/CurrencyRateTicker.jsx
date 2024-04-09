@@ -31,7 +31,7 @@ export default function CurrencyRateTicker() {
   return (
     <div className={styles['currency-rate-container']}>
       <ul className={styles['currency-rate-list']}>
-        {response.map((currency) => (
+        {response.map(currency => (
           <CurrencyItem
             key={currency.cc}
             title={currency.txt}
