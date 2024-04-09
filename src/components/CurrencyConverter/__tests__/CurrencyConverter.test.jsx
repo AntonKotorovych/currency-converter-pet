@@ -2,11 +2,8 @@ import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import CurrencyConverter from '..';
 
-jest.mock('store/ExchangeRatesProvider', () => ({
-  useExchangeRates: jest.fn()
-}));
-
-const onChangeInputMock = jest.fn();
+const mockOnChangeInput = jest.fn();
+let mockIsLoading = true;
 
 jest.mock('hooks/useCurrencyState', () => ({
   useCurrencyState: () => ({
@@ -21,9 +18,13 @@ jest.mock('hooks/useCurrencyState', () => ({
         exchangedate: '09.04.2024'
       }
     },
-    onChangeInput: onChangeInputMock,
+    onChangeInput: mockOnChangeInput,
     onSelectCurrency: jest.fn()
   })
+}));
+
+jest.mock('store/ExchangeRatesProvider', () => ({
+  useExchangeRates: jest.fn(() => ({ isLoading: mockIsLoading }))
 }));
 
 describe('CurrencyConverter', () => {
@@ -33,11 +34,7 @@ describe('CurrencyConverter', () => {
     jest.clearAllMocks();
   });
   test('render component correctly', () => {
-    jest
-      .spyOn(require('store/ExchangeRatesProvider'), 'useExchangeRates')
-      .mockReturnValue({
-        isLoading: false
-      });
+    mockIsLoading = false;
 
     renderComponent();
 
@@ -46,12 +43,8 @@ describe('CurrencyConverter', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
-  test('not render component when isLoading = true and show spinner', () => {
-    jest
-      .spyOn(require('store/ExchangeRatesProvider'), 'useExchangeRates')
-      .mockReturnValue({
-        isLoading: true
-      });
+  test('render loadingSpinner when isLoading', () => {
+    mockIsLoading = true;
 
     renderComponent();
 
@@ -59,12 +52,8 @@ describe('CurrencyConverter', () => {
   });
 
   describe('when user types values', () => {
-    test('calls handleInputChange', async () => {
-      jest
-        .spyOn(require('store/ExchangeRatesProvider'), 'useExchangeRates')
-        .mockReturnValue({
-          isLoading: false
-        });
+    test('calling onChange with correct values', async () => {
+      mockIsLoading = false;
 
       renderComponent();
 
@@ -72,10 +61,10 @@ describe('CurrencyConverter', () => {
 
       await user.type(input, '5');
 
-      expect(onChangeInputMock).toHaveBeenCalledWith({
+      expect(mockOnChangeInput).toHaveBeenCalledWith({
         name: 'firstInput',
-        value: '5'
-      }); // я не розумію як реалізувати логіку тут
+        value: '505'
+      });
     });
   });
 });
