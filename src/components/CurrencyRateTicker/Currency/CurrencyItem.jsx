@@ -1,5 +1,5 @@
-import styles from './CurrencyItem.module.scss';
 import PropTypes from 'prop-types';
+import styles from './CurrencyItem.module.scss';
 
 CurrencyItem.propTypes = {
   title: PropTypes.string.isRequired,
