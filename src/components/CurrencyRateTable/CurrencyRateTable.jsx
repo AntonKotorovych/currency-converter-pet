@@ -41,6 +41,7 @@ export default function CurrencyRateTable() {
           value={searchValue}
           onChange={handleSearchChange}
           placeholder="Пошук Валюти..."
+          data-testid="searchInput"
         />
       </div>
       <div className={styles['currency-rate-table-container']}>
