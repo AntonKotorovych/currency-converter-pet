@@ -2,9 +2,11 @@ import { render, screen } from '@testing-library/react';
 import MainTitle from '..';
 
 describe('MainTitle', () => {
-  const expectedDateFormat = new Intl.DateTimeFormat('uk-UA').format(
-    new Date()
-  );
+  const mockDate = new Date();
+
+  const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
+  spy.mockRestore();
 
   test('renders component correctly', () => {
     render(<MainTitle />);
@@ -14,7 +16,7 @@ describe('MainTitle', () => {
     expect(titleElement).toBeInTheDocument();
 
     expect(titleElement).toHaveTextContent(
-      `Актуальні Курси Валют станом на ${expectedDateFormat}`
+      `Актуальні Курси Валют станом на ${Intl.DateTimeFormat('uk-UA').format(mockDate)}`
     );
   });
 });
