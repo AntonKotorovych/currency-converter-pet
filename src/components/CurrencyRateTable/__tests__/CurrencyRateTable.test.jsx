@@ -1,56 +1,50 @@
 import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { mockResponse } from 'mocks/exchangeRatesResponse';
 import CurrencyRateTable from '..';
 
-let mockResponse = null;
-let mockIsLoading = true;
-let mockError = null;
-
-jest.mock('store/ExchangeRatesProvider', () => ({
-  useExchangeRates: jest.fn(() => ({
-    response: mockResponse,
-    isLoading: mockIsLoading,
-    error: mockError
-  }))
-}));
+jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyRateTable', () => {
-  const renderComponent = () => render(<CurrencyRateTable />);
+  const defaultRatesState = {
+    response: null,
+    isLoading: true,
+    error: null
+  };
+
+  const setExchangeRates = (state = defaultRatesState) =>
+    useExchangeRates.mockReturnValue({ ...state });
 
   beforeEach(() => {
     jest.clearAllMocks();
+    setExchangeRates();
   });
 
-  test('component renders correctly', () => {
-    mockResponse = [
-      {
-        r030: 36,
-        txt: 'Австралійський долар',
-        rate: 25.8124,
-        cc: 'AUD',
-        exchangedate: '10.04.2024'
-      },
-      {
-        r030: 124,
-        txt: 'Канадський долар',
-        rate: 28.721,
-        cc: 'CAD',
-        exchangedate: '10.04.2024'
-      }
-    ];
+  const renderComponent = () => render(<CurrencyRateTable />);
 
-    mockIsLoading = false;
+  describe('without loading', () => {
+    test('renders component correctly', () => {
+      setExchangeRates({
+        response: mockResponse,
+        isLoading: false,
+        error: null
+      });
 
-    renderComponent();
+      renderComponent();
 
-    expect(screen.getByTestId('searchInput')).toBeInTheDocument();
-    expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByTestId('searchInput')).toBeInTheDocument();
+      expect(screen.getByRole('table')).toBeInTheDocument();
+    });
   });
 
-  describe('render spinner', () => {
-    test('when isLoading', () => {
-      mockResponse = null;
-      mockIsLoading = true;
+  describe('with loading', () => {
+    test('renders spinner', () => {
+      setExchangeRates({
+        response: null,
+        isLoading: true,
+        error: null
+      });
 
       renderComponent();
 
@@ -58,38 +52,29 @@ describe('CurrencyRateTable', () => {
     });
   });
 
-  describe('render error', () => {
-    test('when error occured', () => {
-      mockError = 'Error 404';
-      mockResponse = null;
-      mockIsLoading = false;
+  describe('with error', () => {
+    test('renders error text', () => {
+      setExchangeRates({
+        response: null,
+        isLoading: false,
+        error: { name: 'Error 404', message: 'Not Found' }
+      });
 
       renderComponent();
 
-      expect(screen.getByRole('heading', { level: 3 })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+        'Сталася помилка: Error 404. Not Found'
+      );
     });
   });
 
-  describe('user types value into search input', () => {
-    test('value in input field changes', async () => {
-      mockResponse = [
-        {
-          r030: 36,
-          txt: 'Австралійський долар',
-          rate: 25.8124,
-          cc: 'AUD',
-          exchangedate: '10.04.2024'
-        },
-        {
-          r030: 124,
-          txt: 'Канадський долар',
-          rate: 28.721,
-          cc: 'CAD',
-          exchangedate: '10.04.2024'
-        }
-      ];
-      mockError = null;
-      mockIsLoading = false;
+  describe('when user types value into the search input', () => {
+    test('changes the value in input field', async () => {
+      setExchangeRates({
+        response: mockResponse,
+        isLoading: false,
+        error: null
+      });
 
       renderComponent();
 
@@ -98,6 +83,30 @@ describe('CurrencyRateTable', () => {
       await user.type(searchInput, 'USD');
 
       expect(searchInput.value).toBe('USD');
+    });
+
+    test('filters list', async () => {
+      setExchangeRates({
+        response: mockResponse,
+        isLoading: false,
+        error: null
+      });
+
+      renderComponent();
+
+      const searchInput = screen.getByTestId('searchInput');
+
+      await user.type(searchInput, 'Долар');
+
+      const filteredList = screen.getByRole('textbox');
+
+      expect(searchInput.value).toBe('Долар');
+
+      expect(filteredList).toBeInTheDocument();
+
+      expect(screen.getByText('Долар США')).toBeInTheDocument();
+      expect(screen.queryByText('Євро')).not.toBeInTheDocument();
+      expect(screen.queryByText('Японська Єна')).not.toBeInTheDocument();
     });
   });
 });
