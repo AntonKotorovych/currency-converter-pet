@@ -1,70 +1,90 @@
 import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
+import { mockResponse } from 'mocks/exchangeRatesResponse';
+import { useCurrencyState } from 'hooks/useCurrencyState';
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import CurrencyConverter from '..';
 
-const mockOnChangeInput = jest.fn();
-let mockIsLoading = true;
-
-jest.mock('hooks/useCurrencyState', () => ({
-  useCurrencyState: () => ({
-    currencyState: {
-      firstCurrencyInput: 50,
-      secondCurrencyInput: 1,
-      selectedCurrency: {
-        r030: 840,
-        txt: 'Долар США',
-        rate: 38.9882,
-        cc: 'USD',
-        exchangedate: '09.04.2024'
-      }
-    },
-    onChangeInput: mockOnChangeInput,
-    onSelectCurrency: jest.fn()
-  })
-}));
-
-jest.mock('store/ExchangeRatesProvider', () => ({
-  useExchangeRates: jest.fn(() => ({ isLoading: mockIsLoading }))
-}));
+jest.mock('hooks/useCurrencyState');
+jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyConverter', () => {
+  const onChangeInput = jest.fn();
+
+  const defaultCurrencyState = {
+    currencyState: {
+      firstCurrencyInput: 38.9945,
+      secondCurrencyInput: 1,
+      selectedCurrency: mockResponse.find(currency => currency.cc === 'USD')
+    },
+    onChangeInput,
+    onSelectCurrency: jest.fn()
+  };
+
+  const defaultRatesState = {
+    response: null,
+    isLoading: true,
+    error: null
+  };
+
+  const setExchangeRates = (state = defaultRatesState) => {
+    useExchangeRates.mockReturnValue({ ...state });
+  };
+
+  const setCurrencyState = (state = defaultCurrencyState) => {
+    useCurrencyState.mockReturnValue({ ...state });
+  };
+
   const renderComponent = () => render(<CurrencyConverter />);
 
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-  test('render component correctly', () => {
-    mockIsLoading = false;
-
-    renderComponent();
-
-    expect(screen.getByTestId('firstInput')).toBeInTheDocument();
-    expect(screen.getByTestId('secondInput')).toBeInTheDocument();
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    setExchangeRates();
+    setCurrencyState();
   });
 
-  test('render loadingSpinner when isLoading', () => {
-    mockIsLoading = true;
-
-    renderComponent();
-
-    expect(screen.getByTestId('loadingSpinner')).toBeInTheDocument();
-  });
-
-  describe('when user types values', () => {
-    test('calling onChange with correct values', async () => {
-      mockIsLoading = false;
+  describe('without loading', () => {
+    test('renders component correctly', () => {
+      setExchangeRates({
+        response: mockResponse,
+        isLoading: false,
+        error: null
+      });
 
       renderComponent();
 
-      const input = screen.getByTestId('firstInput');
+      expect(screen.getByTestId('firstInput')).toBeInTheDocument();
+      expect(screen.getByTestId('secondInput')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+    });
 
-      await user.type(input, '5');
+    describe('when user types values', () => {
+      test('calls onChange() with correct values', async () => {
+        setExchangeRates({
+          response: mockResponse,
+          isLoading: false,
+          error: null
+        });
 
-      expect(mockOnChangeInput).toHaveBeenCalledWith({
-        name: 'firstInput',
-        value: '505'
+        renderComponent();
+
+        await user.type(screen.getByTestId('firstInput'), '5');
+
+        expect(onChangeInput).toHaveBeenCalledWith({
+          name: 'firstInput',
+          value: '38.99455'
+        });
       });
+    });
+  });
+
+  describe('with loading', () => {
+    test('render spinner', () => {
+      setExchangeRates();
+
+      renderComponent();
+
+      expect(screen.getByTestId('loadingSpinner')).toBeInTheDocument();
     });
   });
 });
