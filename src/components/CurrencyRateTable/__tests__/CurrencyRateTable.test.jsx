@@ -14,7 +14,7 @@ describe('CurrencyRateTable', () => {
   };
 
   const setExchangeRates = (state = defaultRatesState) =>
-    useExchangeRates.mockReturnValue({ ...state });
+    useExchangeRates.mockReturnValue(state);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,9 +26,9 @@ describe('CurrencyRateTable', () => {
   describe('without loading', () => {
     test('renders component correctly', () => {
       setExchangeRates({
+        ...defaultRatesState,
         response: mockResponse,
-        isLoading: false,
-        error: null
+        isLoading: false
       });
 
       renderComponent();
@@ -40,11 +40,7 @@ describe('CurrencyRateTable', () => {
 
   describe('with loading', () => {
     test('renders spinner', () => {
-      setExchangeRates({
-        response: null,
-        isLoading: true,
-        error: null
-      });
+      setExchangeRates();
 
       renderComponent();
 
@@ -55,7 +51,7 @@ describe('CurrencyRateTable', () => {
   describe('with error', () => {
     test('renders error text', () => {
       setExchangeRates({
-        response: null,
+        ...defaultRatesState,
         isLoading: false,
         error: { name: 'Error 404', message: 'Not Found' }
       });
@@ -71,9 +67,9 @@ describe('CurrencyRateTable', () => {
   describe('when user types value into the search input', () => {
     test('changes the value in input field', async () => {
       setExchangeRates({
+        ...defaultRatesState,
         response: mockResponse,
-        isLoading: false,
-        error: null
+        isLoading: false
       });
 
       renderComponent();
@@ -87,9 +83,9 @@ describe('CurrencyRateTable', () => {
 
     test('filters list', async () => {
       setExchangeRates({
+        ...defaultRatesState,
         response: mockResponse,
-        isLoading: false,
-        error: null
+        isLoading: false
       });
 
       renderComponent();

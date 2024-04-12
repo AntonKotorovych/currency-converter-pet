@@ -35,9 +35,9 @@ describe('CurrencySelect', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
-  describe('user select options', () => {
+  describe('when user selects options', () => {
     describe('with response', () => {
-      describe('with selected currency', () => {
+      describe('when user selects currency', () => {
         test('calls onChange()', async () => {
           setExchangeRates({ response: mockResponse });
 

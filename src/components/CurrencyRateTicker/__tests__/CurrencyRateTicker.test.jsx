@@ -13,7 +13,7 @@ describe('CurrencyRateTicker', () => {
   };
 
   const setExchangeRates = (state = defaultRatesState) =>
-    useExchangeRates.mockReturnValue({ ...state });
+    useExchangeRates.mockReturnValue(state);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,9 +25,9 @@ describe('CurrencyRateTicker', () => {
   describe('without loading', () => {
     test('renders the exchange rates list', () => {
       setExchangeRates({
+        ...defaultRatesState,
         response: mockResponse,
-        isLoading: false,
-        error: null
+        isLoading: false
       });
 
       renderComponent();
