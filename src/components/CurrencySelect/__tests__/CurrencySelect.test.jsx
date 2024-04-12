@@ -62,6 +62,11 @@ describe('CurrencySelect', () => {
 
         renderComponent();
 
+        const select = screen.getByRole('combobox');
+        expect(select).toBeInTheDocument();
+
+        await user.click(select);
+
         expect(onChange).not.toHaveBeenCalled();
       });
     });

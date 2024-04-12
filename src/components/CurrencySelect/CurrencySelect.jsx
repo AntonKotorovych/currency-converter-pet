@@ -17,9 +17,7 @@ function CurrencySelect({ value, onChange }) {
         const newSelectedCurrency = response.find(
           currency => currency.cc === value
         );
-        if (newSelectedCurrency) {
-          onChange(newSelectedCurrency);
-        }
+        onChange(newSelectedCurrency);
       }
     },
     [response, onChange]
