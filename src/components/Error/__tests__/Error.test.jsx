@@ -2,13 +2,18 @@ import { render, screen } from '@testing-library/react';
 import Error from '..';
 
 describe('Error', () => {
-  const renderComponent = (props = { title: '404', message: 'not found' }) => {
+  const requiredProps = { title: '404', message: 'Not Found' };
+
+  const renderComponent = (props = requiredProps) => {
     render(<Error {...props} />);
   };
 
   test('renders component correctly', () => {
     renderComponent();
 
-    expect(screen.getByRole('heading', { level: 3 })).toBeInTheDocument();
+    const error = screen.getByRole('heading', { level: 3 });
+
+    expect(error).toBeInTheDocument();
+    expect(error).toHaveTextContent('Сталася помилка: 404. Not Found');
   });
 });
