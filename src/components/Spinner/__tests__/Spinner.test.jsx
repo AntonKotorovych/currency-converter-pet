@@ -4,6 +4,6 @@ import Spinner from '..';
 describe('Spinner', () => {
   test('renders component correctly', () => {
     render(<Spinner />);
-    expect(screen.getByTestId('loadingSpinner')).toBeInTheDocument();
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 });

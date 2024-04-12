@@ -42,7 +42,7 @@ describe('CurrencyRateTicker', () => {
 
       renderComponent();
 
-      expect(screen.getByTestId('loadingSpinner')).toBeInTheDocument();
+      expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
   });
 
