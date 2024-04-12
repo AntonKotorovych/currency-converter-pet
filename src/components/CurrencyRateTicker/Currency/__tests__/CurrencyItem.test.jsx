@@ -7,9 +7,25 @@ describe('CurrencyItem', () => {
     rate: 50.25
   };
 
-  test('component renders correctly', () => {
-    render(<CurrencyItem {...requiredProps} />);
+  const renderComponent = (props = requiredProps) => {
+    render(<CurrencyItem {...props} />);
+  };
+
+  test('renders component correctly', () => {
+    renderComponent();
 
     expect(screen.getByRole('listitem')).toBeInTheDocument();
+  });
+
+  describe('with correct title', () => {
+    test('renders component correctly', () => {
+      renderComponent();
+
+      const currencyItem = screen.getByRole('listitem');
+      screen.debug();
+
+      expect(currencyItem).toBeInTheDocument();
+      expect(currencyItem).toHaveTextContent('Доллар США - 50.25 ₴');
+    });
   });
 });
