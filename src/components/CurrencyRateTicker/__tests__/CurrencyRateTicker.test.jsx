@@ -1,43 +1,34 @@
 import { render, screen } from '@testing-library/react';
+import { mockResponse } from 'mocks/exchangeRatesResponse';
+import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import CurrencyRateTicker from '..';
 
-let mockResponse = null;
-let mockIsLoading = true;
-let mockError = null;
-
-jest.mock('store/ExchangeRatesProvider', () => ({
-  useExchangeRates: jest.fn(() => ({
-    response: mockResponse,
-    isLoading: mockIsLoading,
-    error: mockError
-  }))
-}));
+jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyRateTicker', () => {
-  const renderComponent = () => render(<CurrencyRateTicker />);
+  const defaultRatesState = {
+    response: null,
+    isLoading: true,
+    error: null
+  };
+
+  const setExchangeRates = (state = defaultRatesState) =>
+    useExchangeRates.mockReturnValue({ ...state });
 
   beforeEach(() => {
     jest.clearAllMocks();
+    setExchangeRates();
   });
 
-  describe('render component correctly', () => {
-    test('when response fetched', () => {
-      mockResponse = [
-        {
-          r030: 36,
-          txt: 'Австралійський долар',
-          rate: 25.8124,
-          cc: 'AUD',
-          exchangedate: '10.04.2024'
-        },
-        {
-          r030: 124,
-          txt: 'Канадський долар',
-          rate: 28.721,
-          cc: 'CAD',
-          exchangedate: '10.04.2024'
-        }
-      ];
+  const renderComponent = () => render(<CurrencyRateTicker />);
+
+  describe('without loading', () => {
+    test('renders the exchange rates list', () => {
+      setExchangeRates({
+        response: mockResponse,
+        isLoading: false,
+        error: null
+      });
 
       renderComponent();
 
@@ -45,10 +36,9 @@ describe('CurrencyRateTicker', () => {
     });
   });
 
-  describe('render spinner', () => {
-    test('when isLoading', () => {
-      mockResponse = null;
-      mockIsLoading = true;
+  describe('with loading', () => {
+    test('renders spinner', () => {
+      setExchangeRates();
 
       renderComponent();
 
@@ -56,14 +46,22 @@ describe('CurrencyRateTicker', () => {
     });
   });
 
-  describe('render error', () => {
-    test('when error occured', () => {
-      mockError = 'Error 404';
-      mockResponse = null;
+  describe('with error', () => {
+    test('renders error', () => {
+      setExchangeRates({
+        ...defaultRatesState,
+        error: { name: 'Error 404', message: 'Not Found' }
+      });
 
       renderComponent();
 
-      expect(screen.getByRole('heading', { level: 3 })).toBeInTheDocument();
+      screen.debug();
+
+      const error = screen.getByRole('heading', { level: 3 });
+
+      expect(error).toBeInTheDocument();
+
+      expect(error).toHaveTextContent('Сталася помилка: Error 404. Not Found');
     });
   });
 });
