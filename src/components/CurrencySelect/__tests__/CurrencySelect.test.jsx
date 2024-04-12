@@ -1,51 +1,69 @@
 import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { mockResponse } from 'mocks/exchangeRatesResponse';
 import CurrencySelect from '..';
 
-jest.mock('store/ExchangeRatesProvider', () => ({
-  useExchangeRates: jest.fn(() => ({
-    response: []
-  }))
-}));
+jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencySelect', () => {
-  const mockResponse = [
-    { cc: 'EUR', txt: 'Євро' },
-    { cc: 'USD', txt: 'Американский доллар' }
-  ];
+  const defaultRatesState = {
+    response: []
+  };
+
+  const setExchangeRates = (state = defaultRatesState) =>
+    useExchangeRates.mockReturnValue(state);
 
   const onChange = jest.fn();
 
-  const renderComponent = () =>
-    render(<CurrencySelect value="USD" onChange={onChange} />);
+  const requiredProps = {
+    value: 'USD',
+    onChange
+  };
+
+  const renderComponent = (props = requiredProps) =>
+    render(<CurrencySelect {...props} />);
 
   beforeEach(() => {
     jest.clearAllMocks();
+    setExchangeRates();
   });
+
   test('renders component correctly', () => {
     renderComponent();
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
-  describe('onChange', () => {
-    test('calls onChange with selected currency when response exists', async () => {
-      useExchangeRates.mockReturnValueOnce({ response: mockResponse });
+  describe('user select options', () => {
+    describe('with response', () => {
+      describe('with selected currency', () => {
+        test('calls onChange()', async () => {
+          setExchangeRates({ response: mockResponse });
 
-      renderComponent();
+          renderComponent();
 
-      await user.selectOptions(screen.getByRole('combobox'), 'EUR');
+          await user.selectOptions(screen.getByRole('combobox'), 'EUR');
 
-      expect(onChange).toHaveBeenCalledWith({ cc: 'EUR', txt: 'Євро' });
+          expect(onChange).toHaveBeenCalledWith({
+            cc: 'EUR',
+            txt: 'Євро',
+            rate: 42.3519,
+            r030: 978,
+            exchangedate: '10.04.2024'
+          });
+        });
+      });
     });
 
-    test('does not call onChange when response is empty', async () => {
-      useExchangeRates.mockReturnValueOnce({ response: null });
+    describe('without response', () => {
+      test('does not call onChange()', async () => {
+        setExchangeRates({ response: null });
 
-      renderComponent();
+        renderComponent();
 
-      expect(onChange).not.toHaveBeenCalled();
+        expect(onChange).not.toHaveBeenCalled();
+      });
     });
   });
 });
