@@ -32,8 +32,6 @@ describe('HomePage', () => {
   test('matches snapshot', () => {
     const { container } = renderComponent();
 
-    screen.debug();
-
     expect(container).toMatchSnapshot();
   });
 });
