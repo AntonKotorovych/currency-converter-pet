@@ -7,8 +7,8 @@ jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyRateTicker', () => {
   const defaultRatesState = {
-    response: null,
-    isLoading: true,
+    response: mockResponse,
+    isLoading: false,
     error: null
   };
 
@@ -24,11 +24,7 @@ describe('CurrencyRateTicker', () => {
 
   describe('without loading', () => {
     test('renders the exchange rates list', () => {
-      setExchangeRates({
-        ...defaultRatesState,
-        response: mockResponse,
-        isLoading: false
-      });
+      setExchangeRates();
 
       renderComponent();
 
@@ -38,7 +34,11 @@ describe('CurrencyRateTicker', () => {
 
   describe('with loading', () => {
     test('renders spinner', () => {
-      setExchangeRates();
+      setExchangeRates({
+        ...defaultRatesState,
+        response: null,
+        isLoading: true
+      });
 
       renderComponent();
 
@@ -49,7 +49,8 @@ describe('CurrencyRateTicker', () => {
   describe('with error', () => {
     test('renders error', () => {
       setExchangeRates({
-        ...defaultRatesState,
+        response: null,
+        isLoading: false,
         error: { name: 'Error 404', message: 'Not Found' }
       });
 

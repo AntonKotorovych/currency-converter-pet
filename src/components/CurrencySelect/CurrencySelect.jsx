@@ -13,12 +13,10 @@ function CurrencySelect({ value, onChange }) {
 
   const handleSelectCurrency = useCallback(
     value => {
-      if (response) {
-        const newSelectedCurrency = response.find(
-          currency => currency.cc === value
-        );
-        onChange(newSelectedCurrency);
-      }
+      const newSelectedCurrency = response.find(
+        currency => currency.cc === value
+      );
+      onChange(newSelectedCurrency);
     },
     [response, onChange]
   );

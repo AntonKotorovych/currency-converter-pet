@@ -22,8 +22,8 @@ describe('CurrencyConverter', () => {
   };
 
   const defaultRatesState = {
-    response: null,
-    isLoading: true,
+    response: mockResponse,
+    isLoading: false,
     error: null
   };
 
@@ -45,11 +45,7 @@ describe('CurrencyConverter', () => {
 
   describe('without loading', () => {
     test('renders component correctly', () => {
-      setExchangeRates({
-        ...defaultRatesState,
-        response: mockResponse,
-        isLoading: false
-      });
+      setExchangeRates();
 
       renderComponent();
 
@@ -60,11 +56,7 @@ describe('CurrencyConverter', () => {
 
     describe('when user types values', () => {
       test('calls onChange() with correct values', async () => {
-        setExchangeRates({
-          ...defaultRatesState,
-          response: mockResponse,
-          isLoading: false
-        });
+        setExchangeRates();
 
         renderComponent();
 
@@ -80,7 +72,11 @@ describe('CurrencyConverter', () => {
 
   describe('with loading', () => {
     test('render spinner', () => {
-      setExchangeRates();
+      setExchangeRates({
+        ...defaultRatesState,
+        response: null,
+        isLoading: true
+      });
 
       renderComponent();
 

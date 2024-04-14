@@ -22,7 +22,6 @@ describe('CurrencyItem', () => {
       renderComponent();
 
       const currencyItem = screen.getByRole('listitem');
-      screen.debug();
 
       expect(currencyItem).toBeInTheDocument();
       expect(currencyItem).toHaveTextContent('Доллар США - 50.25 ₴');

@@ -2,11 +2,14 @@ import { render, screen } from '@testing-library/react';
 import MainTitle from '..';
 
 describe('MainTitle', () => {
-  const mockDate = new Date();
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2022, 1, 24));
+  });
 
-  const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-  spy.mockRestore();
+  afterAll(() => {
+    jest.useRealTimers();
+  });
 
   test('renders component correctly', () => {
     render(<MainTitle />);
@@ -16,7 +19,7 @@ describe('MainTitle', () => {
     expect(titleElement).toBeInTheDocument();
 
     expect(titleElement).toHaveTextContent(
-      `Актуальні Курси Валют станом на ${Intl.DateTimeFormat('uk-UA').format(mockDate)}`
+      'Актуальні Курси Валют станом на 24.02.2022'
     );
   });
 });
