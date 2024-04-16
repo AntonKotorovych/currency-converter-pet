@@ -203,6 +203,8 @@ describe('useCurrencyState()', () => {
         secondCurrencyInput: '',
         selectedCurrency: null
       });
+
+      expect(localStorage.clear).toHaveBeenCalled();
     });
   });
 
