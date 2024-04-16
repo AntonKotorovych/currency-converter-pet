@@ -47,15 +47,15 @@ describe('Select', () => {
     });
   });
 
-  describe('when onChange is not provided', () => {
-    test('does not throw an error when user selects a value', async () => {
-      const propsWithoutOnChange = { ...requiredProps, onChange: undefined };
+  describe('without onChange', () => {
+    describe('when user selects a value', () => {
+      test('does not throw an error', async () => {
+        renderComponent({ ...requiredProps, onChange: undefined });
 
-      renderComponent(propsWithoutOnChange);
+        await user.selectOptions(screen.getByRole('combobox'), 'EUR');
 
-      await user.selectOptions(screen.getByRole('combobox'), 'EUR');
-
-      expect(onChange).not.toHaveBeenCalled();
+        expect(onChange).not.toHaveBeenCalled();
+      });
     });
   });
 });

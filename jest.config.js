@@ -10,7 +10,11 @@ const config = {
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
-  moduleFileExtensions: ['js', 'jsx']
+  moduleNameMapper: {
+    '\\.(css|scss)$': 'identity-obj-proxy'
+  },
+  moduleFileExtensions: ['js', 'jsx'],
+  modulePaths: ['<rootDir>/src']
 };
 
 export default config;
