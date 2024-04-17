@@ -1,71 +1,104 @@
-import { render, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import {
   ExchangeRatesProvider,
   useExchangeRates
 } from 'store/ExchangeRatesProvider';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve(mockResponse)
-  })
-);
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('ExchangeRatesProvider', () => {
-  test('returns fetch request default value', async () => {
-    let testValue;
+  let originalFetch;
 
-    const TestComponent = () => {
-      testValue = useExchangeRates();
-      return null;
-    };
+  beforeEach(() => {
+    jest.clearAllMocks();
 
-    await act(async () => {
-      render(
-        <ExchangeRatesProvider>
+    originalFetch = global.fetch;
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockResponse)
+      })
+    );
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  const TestComponent = () => {
+    const rates = useExchangeRates();
+    return JSON.stringify(rates);
+  };
+
+  const renderComponent = () =>
+    render(
+      <ExchangeRatesProvider>
+        <div data-testid="container">
           <TestComponent />
-        </ExchangeRatesProvider>
-      );
-    });
+        </div>
+      </ExchangeRatesProvider>
+    );
+  describe('when response', () => {
+    test('returns fetch request default value', async () => {
+      renderComponent();
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(testValue).toEqual({
-      response: mockResponse,
-      isLoading: false,
-      error: null
+      await waitFor(() => {
+        expect(fetch).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('container')).toHaveTextContent(
+          JSON.stringify({
+            response: mockResponse,
+            isLoading: false,
+            error: null
+          })
+        );
+      });
+    });
+  });
+
+  describe('when isLoading', () => {
+    global.fetch = jest.fn(() => new Promise(() => {}));
+
+    test('returns isLoading true value', async () => {
+      renderComponent();
+
+      await waitFor(() => {
+        expect(fetch).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('container')).toHaveTextContent(
+          JSON.stringify({
+            response: null,
+            isLoading: true,
+            error: null
+          })
+        );
+      });
     });
   });
 
   describe('when error', () => {
     test('returns correct error value', async () => {
-      let testValue;
-
       global.fetch = jest.fn().mockResolvedValueOnce({
         json: () => Promise.reject({ title: 'Error 404', name: 'Not Found' })
       });
 
-      const TestComponent = () => {
-        testValue = useExchangeRates();
-        return null;
-      };
+      renderComponent();
 
-      await act(async () => {
-        render(
-          <ExchangeRatesProvider>
-            <TestComponent />
-          </ExchangeRatesProvider>
-        );
+      await waitFor(() => {
+        expect(fetch).toHaveBeenCalledTimes(1);
       });
 
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(testValue).toEqual({
-        response: null,
-        isLoading: false,
-        error: { title: 'Error 404', name: 'Not Found' }
+      await waitFor(() => {
+        expect(screen.getByTestId('container')).toHaveTextContent(
+          JSON.stringify({
+            response: null,
+            isLoading: false,
+            error: { title: 'Error 404', name: 'Not Found' }
+          })
+        );
       });
     });
   });

@@ -118,7 +118,7 @@ describe('useCurrencyState()', () => {
   });
 
   describe('when user changes any input to a negative value', () => {
-    test("don't update currency state", async () => {
+    test("doesn't update currency state", async () => {
       const { result } = customRenderHook();
 
       expect(result.current.currencyState).toEqual(defaultDownloadedState);
@@ -137,8 +137,8 @@ describe('useCurrencyState()', () => {
     });
   });
 
-  describe("when selectedCurrency doesn't have rate", () => {
-    test("don't update currency state", async () => {
+  describe('without selected currency rate', () => {
+    test("doesn't update currency state", async () => {
       setExchangeRates({
         response: [
           {
@@ -189,7 +189,7 @@ describe('useCurrencyState()', () => {
   });
 
   describe('when exchangeRates returns error', () => {
-    test('return empty currency state', () => {
+    test('returns empty currency state', () => {
       setExchangeRates({
         ...defaultRatesState,
         response: null,
