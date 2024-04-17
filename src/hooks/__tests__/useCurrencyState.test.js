@@ -20,6 +20,18 @@ describe('useCurrencyState()', () => {
     error: null
   };
 
+  const defaultDownloadedState = {
+    firstCurrencyInput: 38.99,
+    secondCurrencyInput: 1,
+    selectedCurrency: {
+      r030: 840,
+      txt: 'Долар США',
+      rate: 38.9945,
+      cc: 'USD',
+      exchangedate: '10.04.2024'
+    }
+  };
+
   const setExchangeRates = (state = defaultRatesState) =>
     useExchangeRates.mockReturnValue(state);
 
@@ -107,18 +119,6 @@ describe('useCurrencyState()', () => {
 
   describe('when user changes any input to a negative value', () => {
     test("don't update currency state", async () => {
-      const defaultDownloadedState = {
-        firstCurrencyInput: 38.99,
-        secondCurrencyInput: 1,
-        selectedCurrency: {
-          r030: 840,
-          txt: 'Долар США',
-          rate: 38.9945,
-          cc: 'USD',
-          exchangedate: '10.04.2024'
-        }
-      };
-
       const { result } = customRenderHook();
 
       expect(result.current.currencyState).toEqual(defaultDownloadedState);
@@ -227,6 +227,30 @@ describe('useCurrencyState()', () => {
       const { result } = customRenderHook();
 
       expect(result.current.currencyState).toEqual(currencyState);
+    });
+  });
+
+  describe('when onChangeInput() has wrong name value', () => {
+    test('updates currency state', () => {
+      const { result } = customRenderHook();
+
+      expect(result.current.currencyState).toEqual(defaultDownloadedState);
+
+      act(() => {
+        result.current.onChangeInput({ value: 100, name: 'wrongName' });
+      });
+
+      expect(result.current.currencyState).toEqual({
+        firstCurrencyInput: undefined,
+        secondCurrencyInput: undefined,
+        selectedCurrency: {
+          r030: 840,
+          txt: 'Долар США',
+          rate: 38.9945,
+          cc: 'USD',
+          exchangedate: '10.04.2024'
+        }
+      });
     });
   });
 });
