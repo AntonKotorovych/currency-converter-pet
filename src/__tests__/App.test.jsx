@@ -3,12 +3,10 @@ import { mockResponse } from 'mocks/exchangeRatesResponse';
 import App from '..';
 
 describe('App', () => {
-  let originalFetch;
+  const originalFetch = global.fetch;
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    originalFetch = global.fetch;
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -21,8 +19,10 @@ describe('App', () => {
     global.fetch = originalFetch;
   });
 
+  const renderComponent = () => render(<App />);
+
   test('renders component correctly', async () => {
-    render(<App />);
+    renderComponent();
 
     screen.debug();
   });

@@ -6,5 +6,5 @@
     ],
     ["@babel/preset-react", { "runtime": "automatic" }]
   ],
-  "plugins": ["@babel/plugin-syntax-import-meta"]
+  "plugins": ["babel-plugin-transform-vite-meta-env"]
 }

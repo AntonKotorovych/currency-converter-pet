@@ -15,9 +15,6 @@ const config = {
   },
   moduleFileExtensions: ['js', 'jsx'],
   modulePaths: ['<rootDir>/src'],
-  transformIgnorePatterns: [
-    '/node_modules/(?!(@babel/plugin-syntax-import-meta)/)'
-  ],
   modulePathIgnorePatterns: ['<rootDir>/src/index.jsx']
 };
 

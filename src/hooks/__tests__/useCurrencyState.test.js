@@ -57,60 +57,59 @@ describe('useCurrencyState()', () => {
       selectedCurrency: null
     });
   });
-  describe("when localStorage calls it's methods", () => {
-    describe('when initial render', () => {
-      test('calls localStorage.getItem()', () => {
-        customRenderHook();
 
-        expect(localStorage.getItem).toHaveBeenCalledTimes(1);
-        expect(localStorage.getItem).toHaveBeenCalledWith('currencyState');
-      });
+  describe('when initial render', () => {
+    test('calls localStorage.getItem()', () => {
+      customRenderHook();
+
+      expect(localStorage.getItem).toHaveBeenCalledTimes(1);
+      expect(localStorage.getItem).toHaveBeenCalledWith('currencyState');
     });
+  });
 
-    describe('when currencyState changes', () => {
-      test('calls localStorage.setItem()', () => {
-        const { result } = customRenderHook();
+  describe('when currencyState changes', () => {
+    test('calls localStorage.setItem()', () => {
+      const { result } = customRenderHook();
 
-        expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+      expect(localStorage.setItem).toHaveBeenCalledTimes(1);
 
-        act(() => {
-          result.current.onChangeInput({ value: 100, name: 'firstInput' });
-        });
-
-        expect(localStorage.setItem).toHaveBeenCalledTimes(2);
-
-        act(() => {
-          result.current.onChangeInput({ value: 100, name: 'secondInput' });
-        });
-
-        expect(localStorage.setItem).toHaveBeenCalledTimes(3);
-
-        act(() => {
-          result.current.onSelectCurrency({
-            r030: 818,
-            txt: 'Єгипетський фунт',
-            rate: 0.8201,
-            cc: 'EGP',
-            exchangedate: '10.04.2024'
-          });
-        });
-
-        expect(localStorage.setItem).toHaveBeenCalledTimes(4);
+      act(() => {
+        result.current.onChangeInput({ value: 100, name: 'firstInput' });
       });
+
+      expect(localStorage.setItem).toHaveBeenCalledTimes(2);
+
+      act(() => {
+        result.current.onChangeInput({ value: 100, name: 'secondInput' });
+      });
+
+      expect(localStorage.setItem).toHaveBeenCalledTimes(3);
+
+      act(() => {
+        result.current.onSelectCurrency({
+          r030: 818,
+          txt: 'Єгипетський фунт',
+          rate: 0.8201,
+          cc: 'EGP',
+          exchangedate: '10.04.2024'
+        });
+      });
+
+      expect(localStorage.setItem).toHaveBeenCalledTimes(4);
     });
+  });
 
-    describe('when error', () => {
-      test('calls localStorage.clear()', () => {
-        setExchangeRates({
-          ...defaultRatesState,
-          response: null,
-          error: !null
-        });
-
-        customRenderHook();
-
-        expect(localStorage.clear).toHaveBeenCalled();
+  describe('when error', () => {
+    test('calls localStorage.clear()', () => {
+      setExchangeRates({
+        ...defaultRatesState,
+        response: null,
+        error: !null
       });
+
+      customRenderHook();
+
+      expect(localStorage.clear).toHaveBeenCalled();
     });
   });
 

@@ -6,12 +6,10 @@ import {
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 
 describe('ExchangeRatesProvider', () => {
-  let originalFetch;
+  const originalFetch = global.fetch;
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    originalFetch = global.fetch;
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -37,6 +35,7 @@ describe('ExchangeRatesProvider', () => {
         </div>
       </ExchangeRatesProvider>
     );
+
   describe('when response', () => {
     test('returns fetch request default value', async () => {
       renderComponent();
