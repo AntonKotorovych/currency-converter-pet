@@ -1,4 +1,4 @@
-import { screen, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import HomePage from '..';
