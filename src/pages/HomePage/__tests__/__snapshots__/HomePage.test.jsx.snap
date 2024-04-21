@@ -12,6 +12,7 @@ exports[`HomePage matches snapshot 1`] = `
   </div>
   <div
     class="currency-rate-container"
+    data-testid="currency-rate-container"
   >
     <ul
       class="currency-rate-list"

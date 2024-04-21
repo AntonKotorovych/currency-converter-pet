@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
+const NBU_API = import.meta.env.VITE_NBU_CURRENCY_EXCHANGE_API;
+
 const ExchangeRatesContext = createContext(null);
 
 export const useExchangeRates = () => useContext(ExchangeRatesContext);
@@ -10,8 +12,6 @@ export function ExchangeRatesProvider({ children }) {
     isLoading: true,
     error: null
   });
-
-  const NBU_API = import.meta.env.VITE_NBU_CURRENCY_EXCHANGE_API;
 
   useEffect(() => {
     (async () => {

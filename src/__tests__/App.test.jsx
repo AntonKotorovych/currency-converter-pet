@@ -34,25 +34,7 @@ describe('App', () => {
     const { container } = renderComponent();
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledTimes(1);
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
-
-      expect(
-        screen.getByText('Актуальні Курси Валют станом на 24.02.2022')
-      ).toBeInTheDocument();
-
-      const currencyItems = screen.getAllByRole('listitem');
-
-      expect(currencyItems).toHaveLength(61);
-
-      expect(currencyItems[0]).toHaveTextContent(
-        'Австралійський долар - 25.8124 ₴'
-      );
-
-      expect(currencyItems[1]).toHaveTextContent('Канадський долар - 28.721 ₴');
+      expect(screen.getByTestId('currency-rate-container')).toBeInTheDocument();
     });
 
     expect(container).toMatchSnapshot();

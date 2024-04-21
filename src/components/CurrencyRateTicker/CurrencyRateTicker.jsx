@@ -29,7 +29,10 @@ export default function CurrencyRateTicker() {
     );
 
   return (
-    <div className={styles['currency-rate-container']}>
+    <div
+      data-testid="currency-rate-container"
+      className={styles['currency-rate-container']}
+    >
       <ul className={styles['currency-rate-list']}>
         {response.map(currency => (
           <CurrencyItem
