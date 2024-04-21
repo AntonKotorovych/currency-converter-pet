@@ -14,7 +14,8 @@ const config = {
     '\\.(css|scss)$': 'identity-obj-proxy'
   },
   moduleFileExtensions: ['js', 'jsx'],
-  modulePaths: ['<rootDir>/src']
+  modulePaths: ['<rootDir>/src'],
+  modulePathIgnorePatterns: ['<rootDir>/src/index.jsx']
 };
 
 export default config;

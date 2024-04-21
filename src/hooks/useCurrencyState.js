@@ -14,6 +14,8 @@ export const useCurrencyState = () => {
     ({ value, name }) => {
       const rate = currencyState?.selectedCurrency?.rate;
 
+      if (!rate) return;
+
       if (value < 0) return;
 
       const ratios = {
@@ -72,7 +74,9 @@ export const useCurrencyState = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('currencyState', JSON.stringify(currencyState));
+    if (currencyState.selectedCurrency) {
+      localStorage.setItem('currencyState', JSON.stringify(currencyState));
+    }
   }, [currencyState]);
 
   return { currencyState, onSelectCurrency, onChangeInput };

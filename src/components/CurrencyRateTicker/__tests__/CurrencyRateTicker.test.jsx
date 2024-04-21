@@ -56,8 +56,6 @@ describe('CurrencyRateTicker', () => {
 
       renderComponent();
 
-      screen.debug();
-
       const error = screen.getByRole('heading', { level: 3 });
 
       expect(error).toBeInTheDocument();

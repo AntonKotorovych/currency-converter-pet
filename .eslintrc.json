@@ -1,4 +1,10 @@
 {
+  "overrides": [
+    {
+      "files": ["**/*.test.js?(x)"],
+      "extends": ["plugin:testing-library/react"]
+    }
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:import/errors",

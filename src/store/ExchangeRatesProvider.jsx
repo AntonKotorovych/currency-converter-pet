@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { NBU_CURRENCY_EXCHANGE_API } from 'constants';
+
+const NBU_API = import.meta.env.VITE_NBU_CURRENCY_EXCHANGE_API;
 
 const ExchangeRatesContext = createContext(null);
 
@@ -15,7 +16,7 @@ export function ExchangeRatesProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(NBU_CURRENCY_EXCHANGE_API);
+        const response = await fetch(NBU_API);
         const data = await response.json();
         setExchangeRates({
           response: data,
