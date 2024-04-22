@@ -1,6 +1,7 @@
 /** @type {import('jest').Config} */
 
 const config = {
+  preset: 'ts-jest',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx}'],
   coverageReporters: ['text', 'json-summary', 'html'],
@@ -8,12 +9,12 @@ const config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
   transform: {
-    '^.+\\.(js|jsx)$': 'babel-jest'
+    '^.+\\.(js|jsx|ts|tsx)$': 'ts-jest'
   },
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy'
   },
-  moduleFileExtensions: ['js', 'jsx'],
+  moduleFileExtensions: ['js', 'jsx', 'tsx'],
   modulePaths: ['<rootDir>/src'],
   modulePathIgnorePatterns: ['<rootDir>/src/index.jsx']
 };

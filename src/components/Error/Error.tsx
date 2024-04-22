@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types';
 import styles from './Error.module.scss';
 
-Error.propTypes = {
-  title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired
-};
+export interface Props {
+  title: string;
+  message: string;
+}
 
-export default function Error({ title, message }) {
+export default function Error({ title, message }: Props) {
   return (
     <div className={styles['error']}>
       <h3>

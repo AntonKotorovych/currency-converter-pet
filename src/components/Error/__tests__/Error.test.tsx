@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import Error from '..';
+
+import Error, { Props } from '..';
 
 describe('Error', () => {
-  const requiredProps = { title: '404', message: 'Not Found' };
+  const requiredProps: Props = { title: '404', message: 'Not Found' };
 
   const renderComponent = (props = requiredProps) => {
     render(<Error {...props} />);
