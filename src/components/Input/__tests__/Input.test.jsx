@@ -23,7 +23,7 @@ describe('Input', () => {
   test('renders component correctly', () => {
     renderComponent();
 
-    expect(screen.queryByTestId('firstInput')).toBeInTheDocument();
+    expect(screen.getByTestId('firstInput')).toBeInTheDocument();
   });
 
   describe('when user types values', () => {

@@ -5,8 +5,10 @@
       "extends": ["plugin:testing-library/react"]
     }
   ],
+  "parser": "@typescript-eslint/parser",
+
   "extends": [
-    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
@@ -44,7 +46,14 @@
     "semi": [2, "always"],
     "semi-style": "error"
   },
-  "plugins": ["react", "import", "jsx-a11y", "prettier", "jest"],
+  "plugins": [
+    "react",
+    "import",
+    "jsx-a11y",
+    "prettier",
+    "jest",
+    "@typescript-eslint"
+  ],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -65,7 +74,7 @@
     "import/resolver": {
       "node": {
         "paths": ["src"],
-        "extensions": [".js", ".jsx"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   }
