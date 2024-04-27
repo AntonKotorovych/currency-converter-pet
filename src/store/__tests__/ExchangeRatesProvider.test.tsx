@@ -1,8 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import {
-  ExchangeRatesProvider,
-  useExchangeRates
-} from 'store/ExchangeRatesProvider';
+import { ExchangeRatesProvider, useExchangeRates } from 'store/ExchangeRatesProvider';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 
 describe('ExchangeRatesProvider', () => {
@@ -11,11 +8,11 @@ describe('ExchangeRatesProvider', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    global.fetch = jest.fn(() =>
+    global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse)
       })
-    ) as jest.Mock;
+    );
   });
 
   afterEach(() => {
@@ -81,7 +78,7 @@ describe('ExchangeRatesProvider', () => {
   describe('when error', () => {
     test('returns correct error value', async () => {
       global.fetch = jest.fn().mockResolvedValueOnce({
-        json: () => Promise.reject({ title: 'Error 404', name: 'Not Found' })
+        json: () => Promise.reject({ name: 'Error 404', message: 'Not Found' })
       });
 
       renderComponent();
@@ -95,7 +92,7 @@ describe('ExchangeRatesProvider', () => {
           JSON.stringify({
             response: null,
             isLoading: false,
-            error: { title: 'Error 404', name: 'Not Found' }
+            error: { name: 'Error 404', message: 'Not Found' }
           })
         );
       });

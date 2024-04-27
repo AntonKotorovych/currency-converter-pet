@@ -1,32 +1,26 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import { Currency } from 'types/interfaces/index';
+import { Currency } from 'types/interfaces/currency';
 
 const NBU_API = import.meta.env.VITE_NBU_CURRENCY_EXCHANGE_API;
+const DEFAULT_EXCHANGE_RATES = {
+  response: null,
+  isLoading: true,
+  error: null
+};
 
-interface ExchangeRates {
+export interface ExchangeRates {
   response: Currency[] | null;
   isLoading: boolean;
-  error: { name: string; message: string } | null | unknown;
+  error: Error | null;
 }
 
-const ExchangeRatesContext = createContext<ExchangeRates | null>(null);
+const ExchangeRatesContext = createContext<ExchangeRates>(DEFAULT_EXCHANGE_RATES);
 
-export const useExchangeRates = () =>
-  useContext(ExchangeRatesContext) as ExchangeRates;
+export const useExchangeRates = () => useContext(ExchangeRatesContext);
 
-export function ExchangeRatesProvider({ children }: { children: ReactNode }) {
-  const [exchangeRates, setExchangeRates] = useState<ExchangeRates>({
-    response: null,
-    isLoading: true,
-    error: null
-  });
+export function ExchangeRatesProvider({ children }: React.PropsWithChildren) {
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRates>(DEFAULT_EXCHANGE_RATES);
 
   useEffect(() => {
     (async () => {
@@ -39,18 +33,18 @@ export function ExchangeRatesProvider({ children }: { children: ReactNode }) {
           error: null
         });
       } catch (error) {
-        setExchangeRates({
-          response: null,
-          isLoading: false,
-          error
-        });
+        if (error instanceof Error) {
+          setExchangeRates({
+            response: null,
+            isLoading: false,
+            error
+          });
+        }
       }
     })();
   }, []);
 
   return (
-    <ExchangeRatesContext.Provider value={exchangeRates}>
-      {children}
-    </ExchangeRatesContext.Provider>
+    <ExchangeRatesContext.Provider value={exchangeRates}>{children}</ExchangeRatesContext.Provider>
   );
 }

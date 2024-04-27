@@ -1,11 +1,4 @@
-export interface Props {
-  type: string;
-  name: string;
-  id?: string;
-  step?: string;
-  value: string | number;
-  placeholder?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   'data-testid'?: string;
 }
 

@@ -14,8 +14,8 @@ export default function CurrencyConverter() {
 
   const { isLoading } = useExchangeRates();
 
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
       const { name, value } = event.target;
 
       onChangeInput({ name, value: parseFloat(value) });
@@ -51,10 +51,7 @@ export default function CurrencyConverter() {
           onChange={handleInputChange}
           data-testid="secondInput"
         />
-        <CurrencySelect
-          value={currencyState.selectedCurrency?.cc}
-          onChange={onSelectCurrency}
-        />
+        <CurrencySelect value={currencyState.selectedCurrency?.cc} onChange={onSelectCurrency} />
       </div>
     </div>
   );

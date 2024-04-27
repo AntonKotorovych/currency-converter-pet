@@ -2,8 +2,7 @@ import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 import { useCurrencyState } from 'hooks/useCurrencyState';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
-import { Currency } from 'types/interfaces';
+import { ExchangeRates, useExchangeRates } from 'store/ExchangeRatesProvider';
 import CurrencyConverter from '..';
 
 jest.mock('hooks/useCurrencyState');
@@ -22,8 +21,8 @@ describe('CurrencyConverter', () => {
     onSelectCurrency: jest.fn()
   };
 
-  const defaultRatesState = {
-    response: mockResponse as Currency[] | null,
+  const defaultRatesState: ExchangeRates = {
+    response: mockResponse,
     isLoading: false,
     error: null
   };
@@ -65,7 +64,7 @@ describe('CurrencyConverter', () => {
 
         expect(onChangeInput).toHaveBeenCalledWith({
           name: 'firstInput',
-          value: '38.99455'
+          value: 38.99455
         });
       });
     });

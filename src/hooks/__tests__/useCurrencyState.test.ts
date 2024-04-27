@@ -2,7 +2,6 @@ import { renderHook, act } from '@testing-library/react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import { useCurrencyState } from 'hooks/useCurrencyState';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
-import { Currency } from 'types/interfaces';
 
 jest.mock('store/ExchangeRatesProvider');
 
@@ -15,10 +14,24 @@ describe('useCurrencyState()', () => {
     jest.clearAllMocks();
   });
 
-  const defaultRatesState = {
-    response: mockResponse as Currency[] | null,
+  interface CurrencyWithNullRate {
+    r030: number;
+    txt: string;
+    rate: number | null;
+    cc: string;
+    exchangedate: string;
+  }
+
+  interface ExchangeRatesNullRate {
+    response: CurrencyWithNullRate[] | null;
+    isLoading: boolean;
+    error: Error | null;
+  }
+
+  const defaultRatesState: ExchangeRatesNullRate = {
+    response: mockResponse,
     isLoading: false,
-    error: null as { name: string; message: string } | null
+    error: null
   };
 
   const defaultDownloadedState = {
@@ -53,7 +66,7 @@ describe('useCurrencyState()', () => {
     const { result } = customRenderHook();
 
     expect(result.current.currencyState).toEqual({
-      firstCurrencyInput: '',
+      firstCurrencyInput: 0,
       secondCurrencyInput: 1,
       selectedCurrency: null
     });
@@ -124,7 +137,7 @@ describe('useCurrencyState()', () => {
       const { result, rerender } = customRenderHook();
 
       expect(result.current.currencyState).toEqual({
-        firstCurrencyInput: '',
+        firstCurrencyInput: 0,
         secondCurrencyInput: 1,
         selectedCurrency: null
       });
@@ -246,7 +259,7 @@ describe('useCurrencyState()', () => {
   });
 
   describe('when exchangeRates returns error', () => {
-    test('returns empty currency state', () => {
+    test('returns default currency state', () => {
       setExchangeRates({
         ...defaultRatesState,
         response: null,
@@ -256,8 +269,8 @@ describe('useCurrencyState()', () => {
       const { result } = customRenderHook();
 
       expect(result.current.currencyState).toEqual({
-        firstCurrencyInput: '',
-        secondCurrencyInput: '',
+        firstCurrencyInput: 0,
+        secondCurrencyInput: 1,
         selectedCurrency: null
       });
 

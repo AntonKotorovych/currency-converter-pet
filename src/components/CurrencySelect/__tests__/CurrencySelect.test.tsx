@@ -1,15 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { ExchangeRates, useExchangeRates } from 'store/ExchangeRatesProvider';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
-import { Currency } from 'types/interfaces';
 import CurrencySelect, { Props } from '..';
 
 jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencySelect', () => {
-  const defaultRatesState = {
-    response: mockResponse as Currency[] | null
+  const defaultRatesState: ExchangeRates = {
+    response: mockResponse,
+    isLoading: false,
+    error: null
   };
 
   const setExchangeRates = (state = defaultRatesState) =>
@@ -22,8 +23,7 @@ describe('CurrencySelect', () => {
     onChange
   };
 
-  const renderComponent = (props = requiredProps) =>
-    render(<CurrencySelect {...props} />);
+  const renderComponent = (props = requiredProps) => render(<CurrencySelect {...props} />);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -57,7 +57,7 @@ describe('CurrencySelect', () => {
 
     describe('without response', () => {
       test('does not call onChange()', async () => {
-        setExchangeRates({ response: null });
+        setExchangeRates({ response: null, isLoading: true, error: null });
 
         renderComponent();
 

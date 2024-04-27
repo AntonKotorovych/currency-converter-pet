@@ -1,17 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { ExchangeRates, useExchangeRates } from 'store/ExchangeRatesProvider';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
-import { Currency } from 'types/interfaces';
 import CurrencyRateTable from '..';
 
 jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyRateTable', () => {
-  const defaultRatesState = {
-    response: mockResponse as Currency[] | null,
+  const defaultRatesState: ExchangeRates = {
+    response: mockResponse,
     isLoading: false,
-    error: null as { name: string; message: string } | null
+    error: null
   };
 
   const setExchangeRates = (state = defaultRatesState) =>
@@ -71,11 +70,11 @@ describe('CurrencyRateTable', () => {
 
       renderComponent();
 
-      const searchInput = screen.getByTestId('searchInput') as HTMLInputElement;
+      const searchInput = screen.getByTestId('searchInput');
 
       await user.type(searchInput, 'USD');
 
-      expect(searchInput.value).toBe('USD');
+      expect(searchInput).toHaveValue('USD');
     });
 
     test('filters list', async () => {
@@ -83,13 +82,13 @@ describe('CurrencyRateTable', () => {
 
       renderComponent();
 
-      const searchInput = screen.getByTestId('searchInput') as HTMLInputElement;
+      const searchInput = screen.getByTestId('searchInput');
 
       await user.type(searchInput, 'Долар');
 
       const filteredList = screen.getByRole('textbox');
 
-      expect(searchInput.value).toBe('Долар');
+      expect(searchInput).toHaveValue('Долар');
 
       expect(filteredList).toBeInTheDocument();
 

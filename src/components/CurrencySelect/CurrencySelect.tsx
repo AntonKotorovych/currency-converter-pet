@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 import Select from 'components/Select';
-import { Currency } from 'types/interfaces';
+import { Currency } from 'types/interfaces/currency';
 
 export interface Props {
   value?: string;
@@ -9,34 +9,27 @@ export interface Props {
 }
 
 function CurrencySelect({ value, onChange }: Props) {
-  const { response }: { response: Currency[] | null } = useExchangeRates();
+  const exchangeRates = useExchangeRates();
 
   const handleSelectCurrency = useCallback(
     (value: string) => {
-      if (response) {
-        const newSelectedCurrency = response.find(
-          (currency: Currency) => currency.cc === value
-        );
+      if (exchangeRates.response) {
+        const newSelectedCurrency = exchangeRates.response.find(currency => currency.cc === value);
+
         if (newSelectedCurrency) onChange(newSelectedCurrency);
       }
     },
-    [response, onChange]
+    [exchangeRates.response, onChange]
   );
 
   const normalizedOptions = useMemo(() => {
-    return response?.map((currency: Currency) => ({
+    return exchangeRates.response?.map(currency => ({
       value: currency.cc,
       label: currency.txt
     }));
-  }, [response]);
+  }, [exchangeRates.response]);
 
-  return (
-    <Select
-      options={normalizedOptions}
-      value={value}
-      onChange={handleSelectCurrency}
-    />
-  );
+  return <Select options={normalizedOptions} value={value} onChange={handleSelectCurrency} />;
 }
 
 export default memo(CurrencySelect);

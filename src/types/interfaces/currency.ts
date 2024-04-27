@@ -1,7 +1,7 @@
 export interface Currency {
   r030: number;
   txt: string;
-  rate: number | null;
+  rate: number;
   cc: string;
   exchangedate: string;
 }

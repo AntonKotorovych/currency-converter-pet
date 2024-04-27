@@ -2,7 +2,7 @@ import styles from './CurrencyItem.module.scss';
 
 export interface Props {
   title: string;
-  rate: number | null;
+  rate: number;
 }
 
 export default function CurrencyItem({ title, rate }: Props) {

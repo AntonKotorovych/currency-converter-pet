@@ -1,21 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Currency } from 'types/interfaces';
+import { Currency } from 'types/interfaces/currency';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
 
 interface CurrencyState {
-  firstCurrencyInput: string | number;
-  secondCurrencyInput: string | number;
+  firstCurrencyInput: number;
+  secondCurrencyInput: number;
   selectedCurrency: Currency | null;
 }
 
 interface Ratios {
   firstInput: {
     newFirstInputValue: number;
-    newSecondInputValue: number | string;
+    newSecondInputValue: number;
   };
   secondInput: {
     newSecondInputValue: number;
-    newFirstInputValue: number | string;
+    newFirstInputValue: number;
   };
 }
 
@@ -24,12 +24,14 @@ interface ChangeInputParams {
   name: string;
 }
 
+const defaultStoreValue = {
+  firstCurrencyInput: 0,
+  secondCurrencyInput: 1,
+  selectedCurrency: null
+};
+
 export const useCurrencyState = () => {
-  const [currencyState, setCurrencyState] = useState<CurrencyState>({
-    firstCurrencyInput: '',
-    secondCurrencyInput: 1,
-    selectedCurrency: null
-  });
+  const [currencyState, setCurrencyState] = useState<CurrencyState>(defaultStoreValue);
 
   const { response, error } = useExchangeRates();
 
@@ -52,8 +54,7 @@ export const useCurrencyState = () => {
         }
       };
 
-      const { newFirstInputValue, newSecondInputValue } =
-        ratios[name as keyof Ratios] || {};
+      const { newFirstInputValue, newSecondInputValue } = ratios[name as keyof Ratios] || {};
 
       setCurrencyState(prevState => ({
         ...prevState,
@@ -69,9 +70,7 @@ export const useCurrencyState = () => {
 
     setCurrencyState(prevState => ({
       ...prevState,
-      firstCurrencyInput: parseFloat(
-        (+prevState.secondCurrencyInput * (newRate as number)).toFixed(2)
-      ),
+      firstCurrencyInput: parseFloat((+prevState.secondCurrencyInput * newRate).toFixed(2)),
       selectedCurrency: newSelectedCurrency
     }));
   }, []);
@@ -79,19 +78,13 @@ export const useCurrencyState = () => {
   useEffect(() => {
     if (error) {
       localStorage.clear();
-      setCurrencyState(() => ({
-        firstCurrencyInput: '',
-        secondCurrencyInput: '',
-        selectedCurrency: null
-      }));
+      setCurrencyState(() => defaultStoreValue);
     }
   }, [error]);
 
   useEffect(() => {
     if (response && !currencyState.selectedCurrency) {
-      const defaultCurrency = response.find(
-        (currency: Currency) => currency.cc === 'USD'
-      );
+      const defaultCurrency = response.find((currency: Currency) => currency.cc === 'USD');
       if (defaultCurrency) onSelectCurrency(defaultCurrency);
     }
   }, [response, currencyState.selectedCurrency, onSelectCurrency]);

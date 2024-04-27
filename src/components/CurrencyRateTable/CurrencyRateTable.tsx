@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useExchangeRates } from 'store/ExchangeRatesProvider';
-import { Currency } from 'types/interfaces';
 
 import Input from 'components/Input';
 import Spinner from 'components/Spinner';
@@ -14,15 +13,15 @@ export default function CurrencyRateTable() {
   const { response, isLoading, error } = useExchangeRates();
 
   const filteredList = useMemo(() => {
-    return response?.filter((currency: Currency) =>
+    return response?.filter(currency =>
       currency.txt.toLowerCase().includes(searchValue.toLowerCase())
     );
   }, [response, searchValue]);
 
   if (isLoading) return <Spinner />;
 
-  if (error && typeof error === 'object') {
-    const { name, message } = error as { name: string; message: string };
+  if (error) {
+    const { name, message } = error;
     return (
       <div className={styles['table-wrapper']}>
         <Error title={name} message={message} />
@@ -56,7 +55,7 @@ export default function CurrencyRateTable() {
           </thead>
           <tbody>
             {filteredList ? (
-              filteredList.map((currency: Currency) => {
+              filteredList.map(currency => {
                 return (
                   <CurrencyRateTableRow
                     key={currency.txt}
@@ -67,9 +66,7 @@ export default function CurrencyRateTable() {
               })
             ) : (
               <tr>
-                <td className={styles['currency-is-not-found']}>
-                  Валюту не знайдено
-                </td>
+                <td className={styles['currency-is-not-found']}>Валюту не знайдено</td>
               </tr>
             )}
           </tbody>

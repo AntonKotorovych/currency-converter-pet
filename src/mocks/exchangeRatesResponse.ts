@@ -1,4 +1,4 @@
-import { Currency } from '../types/interfaces';
+import { Currency } from '../types/interfaces/currency';
 
 export const mockResponse: Currency[] = [
   {

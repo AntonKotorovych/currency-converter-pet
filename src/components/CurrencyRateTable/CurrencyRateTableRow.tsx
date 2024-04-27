@@ -2,7 +2,7 @@ import styles from './CurrencyRateTable.module.scss';
 
 interface Props {
   name: string;
-  rate: number | null;
+  rate: number;
 }
 
 export default function CurrencyRateTableRow({ name, rate }: Props) {

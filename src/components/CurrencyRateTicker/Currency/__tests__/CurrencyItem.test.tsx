@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import CurrencyItem from '..';
+import CurrencyItem, { Props } from '..';
 
 describe('CurrencyItem', () => {
-  const requiredProps = {
+  const requiredProps: Props = {
     title: 'Доллар США',
     rate: 50.25
   };

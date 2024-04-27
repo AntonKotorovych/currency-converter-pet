@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
-import { Currency } from 'types/interfaces';
+import { ExchangeRates, useExchangeRates } from 'store/ExchangeRatesProvider';
 import CurrencyRateTicker from '..';
 
 jest.mock('store/ExchangeRatesProvider');
 
 describe('CurrencyRateTicker', () => {
-  const defaultRatesState = {
-    response: mockResponse as Currency[] | null,
+  const defaultRatesState: ExchangeRates = {
+    response: mockResponse,
     isLoading: false,
-    error: null as { name: string; message: string } | null
+    error: null
   };
 
   const setExchangeRates = (state = defaultRatesState) =>

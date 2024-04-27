@@ -8,11 +8,11 @@ describe('App', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    global.fetch = jest.fn(() =>
+    global.fetch = jest.fn().mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse)
       })
-    ) as jest.Mock;
+    );
   });
 
   afterEach(() => {
