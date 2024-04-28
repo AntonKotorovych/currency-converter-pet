@@ -77,8 +77,10 @@ describe('ExchangeRatesProvider', () => {
 
   describe('when error', () => {
     test('returns correct error value', async () => {
+      const error = new Error('Not Found');
+
       global.fetch = jest.fn().mockResolvedValueOnce({
-        json: () => Promise.reject({ name: 'Error 404', message: 'Not Found' })
+        json: () => Promise.reject(error)
       });
 
       renderComponent();
@@ -92,7 +94,7 @@ describe('ExchangeRatesProvider', () => {
           JSON.stringify({
             response: null,
             isLoading: false,
-            error: { name: 'Error 404', message: 'Not Found' }
+            error
           })
         );
       });

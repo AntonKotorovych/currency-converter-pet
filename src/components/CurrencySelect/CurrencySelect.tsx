@@ -5,7 +5,7 @@ import { Currency } from 'types/interfaces/currency';
 
 export interface Props {
   value?: string;
-  onChange: (newSelectedCurrency: Currency) => void;
+  onChange: (value: Currency) => void;
 }
 
 function CurrencySelect({ value, onChange }: Props) {
@@ -14,7 +14,9 @@ function CurrencySelect({ value, onChange }: Props) {
   const handleSelectCurrency = useCallback(
     (value: string) => {
       if (exchangeRates.response) {
-        const newSelectedCurrency = exchangeRates.response.find(currency => currency.cc === value);
+        const newSelectedCurrency = exchangeRates.response.find(
+          currency => currency.cc === value
+        );
 
         if (newSelectedCurrency) onChange(newSelectedCurrency);
       }
@@ -29,7 +31,13 @@ function CurrencySelect({ value, onChange }: Props) {
     }));
   }, [exchangeRates.response]);
 
-  return <Select options={normalizedOptions} value={value} onChange={handleSelectCurrency} />;
+  return (
+    <Select
+      options={normalizedOptions}
+      value={value}
+      onChange={handleSelectCurrency}
+    />
+  );
 }
 
 export default memo(CurrencySelect);

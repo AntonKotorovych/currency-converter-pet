@@ -24,14 +24,15 @@ interface ChangeInputParams {
   name: string;
 }
 
-const defaultStoreValue = {
+const DEFAULT_STORE_VALUE = {
   firstCurrencyInput: 0,
   secondCurrencyInput: 1,
   selectedCurrency: null
 };
 
 export const useCurrencyState = () => {
-  const [currencyState, setCurrencyState] = useState<CurrencyState>(defaultStoreValue);
+  const [currencyState, setCurrencyState] =
+    useState<CurrencyState>(DEFAULT_STORE_VALUE);
 
   const { response, error } = useExchangeRates();
 
@@ -54,7 +55,8 @@ export const useCurrencyState = () => {
         }
       };
 
-      const { newFirstInputValue, newSecondInputValue } = ratios[name as keyof Ratios] || {};
+      const { newFirstInputValue, newSecondInputValue } =
+        ratios[name as keyof Ratios] || {};
 
       setCurrencyState(prevState => ({
         ...prevState,
@@ -70,7 +72,9 @@ export const useCurrencyState = () => {
 
     setCurrencyState(prevState => ({
       ...prevState,
-      firstCurrencyInput: parseFloat((+prevState.secondCurrencyInput * newRate).toFixed(2)),
+      firstCurrencyInput: parseFloat(
+        (+prevState.secondCurrencyInput * newRate).toFixed(2)
+      ),
       selectedCurrency: newSelectedCurrency
     }));
   }, []);
@@ -78,13 +82,15 @@ export const useCurrencyState = () => {
   useEffect(() => {
     if (error) {
       localStorage.clear();
-      setCurrencyState(() => defaultStoreValue);
+      setCurrencyState(DEFAULT_STORE_VALUE);
     }
   }, [error]);
 
   useEffect(() => {
     if (response && !currencyState.selectedCurrency) {
-      const defaultCurrency = response.find((currency: Currency) => currency.cc === 'USD');
+      const defaultCurrency = response.find(
+        (currency: Currency) => currency.cc === 'USD'
+      );
       if (defaultCurrency) onSelectCurrency(defaultCurrency);
     }
   }, [response, currencyState.selectedCurrency, onSelectCurrency]);

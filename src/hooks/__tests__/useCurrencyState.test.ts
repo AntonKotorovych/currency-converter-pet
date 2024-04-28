@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useExchangeRates } from 'store/ExchangeRatesProvider';
+import { ExchangeRates, useExchangeRates } from 'store/ExchangeRatesProvider';
 import { useCurrencyState } from 'hooks/useCurrencyState';
 import { mockResponse } from 'mocks/exchangeRatesResponse';
 
@@ -14,21 +14,7 @@ describe('useCurrencyState()', () => {
     jest.clearAllMocks();
   });
 
-  interface CurrencyWithNullRate {
-    r030: number;
-    txt: string;
-    rate: number | null;
-    cc: string;
-    exchangedate: string;
-  }
-
-  interface ExchangeRatesNullRate {
-    response: CurrencyWithNullRate[] | null;
-    isLoading: boolean;
-    error: Error | null;
-  }
-
-  const defaultRatesState: ExchangeRatesNullRate = {
+  const defaultRatesState: ExchangeRates = {
     response: mockResponse,
     isLoading: false,
     error: null
@@ -214,7 +200,7 @@ describe('useCurrencyState()', () => {
           {
             r030: 840,
             txt: 'Долар США',
-            rate: null,
+            rate: null as unknown as number,
             cc: 'USD',
             exchangedate: '10.04.2024'
           },
