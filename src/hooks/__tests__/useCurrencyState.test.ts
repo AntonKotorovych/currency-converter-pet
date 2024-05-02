@@ -192,6 +192,35 @@ describe('useCurrencyState()', () => {
     });
   });
 
+  describe('without selected currency', () => {
+    test("doesn't update currency state", async () => {
+      const stateWithoutCurrency = {
+        firstCurrencyInput: 0,
+        secondCurrencyInput: 1,
+        selectedCurrency: null
+      };
+
+      setExchangeRates({
+        ...defaultRatesState,
+        response: null
+      });
+
+      const { result } = customRenderHook();
+
+      act(() => {
+        result.current.onChangeInput({ value: 5, name: 'firstInput' });
+      });
+
+      expect(result.current.currencyState).toEqual(stateWithoutCurrency);
+
+      act(() => {
+        result.current.onChangeInput({ value: 10, name: 'secondInput' });
+      });
+
+      expect(result.current.currencyState).toEqual(stateWithoutCurrency);
+    });
+  });
+
   describe('without selected currency rate', () => {
     test("doesn't update currency state", async () => {
       setExchangeRates({

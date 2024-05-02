@@ -38,7 +38,7 @@ export const useCurrencyState = () => {
 
   const onChangeInput = useCallback(
     ({ value, name }: ChangeInputParams) => {
-      const rate = currencyState?.selectedCurrency?.rate;
+      const rate = currencyState.selectedCurrency?.rate;
 
       if (!rate) return;
 
@@ -64,7 +64,7 @@ export const useCurrencyState = () => {
         secondCurrencyInput: newSecondInputValue
       }));
     },
-    [currencyState?.selectedCurrency]
+    [currencyState.selectedCurrency]
   );
 
   const onSelectCurrency = useCallback((newSelectedCurrency: Currency) => {
