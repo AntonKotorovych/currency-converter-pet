@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VITE_NBU_CURRENCY_EXCHANGE_API: ${{ secrets.VITE_NBU_CURRENCY_EXCHANGE_API }}    
     steps:
       - uses: actions/checkout@v3
 
