@@ -20,10 +20,10 @@ jobs:
 
       - name: Build the app
         run: npm run build
+        env:
+          VITE_NBU_CURRENCY_EXCHANGE_API: ${{ secrets.VITE_NBU_CURRENCY_EXCHANGE_API }}  
 
       - name: Deploy the app
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
-        env:
-          VITE_NBU_CURRENCY_EXCHANGE_API: ${{ secrets.VITE_NBU_CURRENCY_EXCHANGE_API }}  
