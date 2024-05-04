@@ -18,9 +18,7 @@ jobs:
       - name: Test the app
         run: npm run test
 
-      - name: Build the app
-        env:
-          VITE_NBU_CURRENCY_EXCHANGE_API: ${{ vars.VITE_NBU_CURRENCY_EXCHANGE_API }}  
+      - name: Build the app 
         run: npm run build
         
       - name: Deploy the app
