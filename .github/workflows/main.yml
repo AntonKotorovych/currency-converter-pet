@@ -3,12 +3,9 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
-
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      VITE_NBU_CURRENCY_EXCHANGE_API: ${{ secrets.VITE_NBU_CURRENCY_EXCHANGE_API }}    
+    runs-on: ubuntu-latest  
     steps:
       - uses: actions/checkout@v3
 
@@ -28,3 +25,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
+        env:
+          VITE_NBU_CURRENCY_EXCHANGE_API: ${{ secrets.VITE_NBU_CURRENCY_EXCHANGE_API }}  
