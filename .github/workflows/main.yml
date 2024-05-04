@@ -42,6 +42,8 @@ jobs:
       - name: Test the App
         run: npm run test
       - name: Build
+        env: 
+          VITE_NBU_CURRENCY_EXCHANGE_API: ${{ vars.VITE_NBU_CURRENCY_EXCHANGE_API }}
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
